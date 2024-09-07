@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace Primrose
 {
@@ -18,6 +19,11 @@ namespace Primrose
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            // Allowing the user to resize the window and
+            // subscribing the callback method for window resizing.
+            Window.AllowUserResizing = true;
+            Window.ClientSizeChanged += OnResize;
         }
 
         protected override void Initialize()
@@ -54,6 +60,22 @@ namespace Primrose
             floor.Draw(camera, effect);
 
             base.Draw(gameTime);
+        }
+
+
+        /// <summary>
+        /// Callback method for when the window is resized
+        /// </summary>
+        private void OnResize(Object sender, EventArgs e)
+        {
+            //Applying changes to the viewport if the window has changed dimensions
+            if ((_graphics.PreferredBackBufferWidth != _graphics.GraphicsDevice.Viewport.Width) ||
+                (_graphics.PreferredBackBufferHeight != _graphics.GraphicsDevice.Viewport.Height))
+            {
+                _graphics.PreferredBackBufferWidth = _graphics.GraphicsDevice.Viewport.Width;
+                _graphics.PreferredBackBufferHeight = _graphics.GraphicsDevice.Viewport.Height;
+                _graphics.ApplyChanges();
+            }
         }
     }
 }
