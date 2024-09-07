@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Primrose", "Primrose.csproj", "{6133708B-CCA0-42CE-BA70-9253F8DDA4F0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6133708B-CCA0-42CE-BA70-9253F8DDA4F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6133708B-CCA0-42CE-BA70-9253F8DDA4F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6133708B-CCA0-42CE-BA70-9253F8DDA4F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6133708B-CCA0-42CE-BA70-9253F8DDA4F0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CC2491F9-764A-48CB-85F3-33D91E78D80E}
+	EndGlobalSection
+EndGlobal
