@@ -9,6 +9,10 @@ namespace Primrose
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        private ViewFloor floor;
+        private Camera camera;
+        private BasicEffect effect;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -19,6 +23,10 @@ namespace Primrose
         protected override void Initialize()
         {
             base.Initialize();
+
+            camera = new Camera(_graphics.GraphicsDevice, new Vector3(10.0f, 1.0f, 5.0f), Vector3.Zero, 5.0f);
+            floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
+            effect = new BasicEffect(_graphics.GraphicsDevice);
         }
 
         protected override void LoadContent()
@@ -34,12 +42,16 @@ namespace Primrose
                 Exit();
             }
 
+            camera.Update(gameTime);
+
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            floor.Draw(camera, effect);
 
             base.Draw(gameTime);
         }
