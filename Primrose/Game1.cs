@@ -90,13 +90,9 @@ namespace Primrose
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            RasterizerState rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.CullClockwiseFace;
-            GraphicsDevice.RasterizerState = rasterizerState;
+            Globals.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullClockwiseFace);
             skybox.Draw(camera.View, camera.Projection, camera.Position);
-            rasterizerState = new RasterizerState();
-            rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
-            GraphicsDevice.RasterizerState = rasterizerState;
+            Globals.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             floor.Draw(camera, effect);
 
