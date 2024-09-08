@@ -125,12 +125,16 @@ namespace Primrose
         /// <returns>The new position.</returns>
         private Vector3 PreviewMove(Vector3 velocity)
         {
+            // Creting the rotation matrix based on the Y of the rotation vector.
             Matrix rotate = Matrix.CreateRotationY(_camRotation.Y);
 
+            // Copying the velocity Vector.
             Vector3 movement = new Vector3(velocity.X, velocity.Y, velocity.Z);
 
+            // Transforming the velocity by the rotation matrix.
             movement = Vector3.Transform(movement, rotate);
 
+            // Adding the movement to the camera position.
             return _camPosition + movement;
         }
 
