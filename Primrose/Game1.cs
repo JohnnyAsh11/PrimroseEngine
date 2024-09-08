@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Primrose.Content;
 using System;
+using System.Diagnostics;
 
 namespace Primrose
 {
@@ -12,7 +14,11 @@ namespace Primrose
 
         private ViewFloor floor;
         private Camera camera;
+        private Skybox skybox;
         private BasicEffect effect;
+        private GameState gameState;
+
+        private KeyboardState prevKBState;
 
         public Game1()
         {
@@ -33,29 +39,64 @@ namespace Primrose
             camera = new Camera(_graphics.GraphicsDevice, new Vector3(10.0f, 1.0f, 5.0f), Vector3.Zero, 5.0f);
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
             effect = new BasicEffect(_graphics.GraphicsDevice);
+
+            gameState = GameState.Update;
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            skybox = new Skybox("Textures/Skybox", Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-                Keyboard.GetState().IsKeyDown(Keys.Escape))
+            KeyboardState kbState = Keyboard.GetState();
+
+            switch (gameState)
             {
-                Exit();
+                case GameState.Pause:
+
+                    if (kbState.IsKeyDown(Keys.Escape) && prevKBState.IsKeyUp(Keys.Escape))
+                    {
+                        Exit();
+                    }
+                    if (kbState.IsKeyDown(Keys.Space) && prevKBState.IsKeyUp(Keys.Space))
+                    {
+                        gameState = GameState.Update;
+                    }
+
+                    break;
+                case GameState.Update:
+
+                    camera.Update(gameTime);
+
+                    if (kbState.IsKeyDown(Keys.Space) && prevKBState.IsKeyUp(Keys.Space))
+                    {
+                        gameState = GameState.Pause;
+                    }
+
+                    break;
+                case GameState.PermEnd:
+                    break;
             }
 
-            camera.Update(gameTime);
 
+            prevKBState = kbState;
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+
+            RasterizerState rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.CullClockwiseFace;
+            GraphicsDevice.RasterizerState = rasterizerState;
+            skybox.Draw(camera.View, camera.Projection, camera.Position);
+            rasterizerState = new RasterizerState();
+            rasterizerState.CullMode = CullMode.CullCounterClockwiseFace;
+            GraphicsDevice.RasterizerState = rasterizerState;
 
             floor.Draw(camera, effect);
 
