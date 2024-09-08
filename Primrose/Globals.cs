@@ -19,7 +19,7 @@ namespace Primrose
 
         // Methods:
         /// <summary>
-        /// Flips back and forth between CullModes in the reference to the GraphicsDevice object.
+        /// Alters the CullMode in the GraphicsDevice object.
         /// </summary>
         /// <param name="graphics">Reference to the GraphicsDevice object.</param>
         /// <param name="cullMode">Cull Mode being changed to.</param>
