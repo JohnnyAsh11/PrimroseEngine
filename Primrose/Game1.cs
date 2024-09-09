@@ -18,6 +18,9 @@ namespace Primrose
         private BasicEffect effect;
         private GameState gameState;
 
+        private Model knight;
+        private Texture2D knightTexture;
+
         private KeyboardState prevKBState;
 
         public Game1()
@@ -47,6 +50,9 @@ namespace Primrose
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             skybox = new Skybox("Textures/Skybox", Content);
+
+            knight = Content.Load<Model>("knight");
+            knightTexture = Content.Load<Texture2D>("knight_texture");
         }
 
         protected override void Update(GameTime gameTime)
@@ -95,6 +101,9 @@ namespace Primrose
             Globals.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             floor.Draw(camera, effect);
+
+            //knight.Draw(Matrix.Identity, camera.View, camera.Projection);
+            Globals.DrawModel(knight, knightTexture, Matrix.Identity, camera.View, camera.Projection);            
 
             base.Draw(gameTime);
         }
