@@ -94,7 +94,7 @@ namespace Primrose.Primrose.Base
         /// <returns>Whether or not a collision has occured.</returns>
         public bool CheckCollision(ICollid collidable)
         {
-
+            //if ()
 
             return false;
         }
