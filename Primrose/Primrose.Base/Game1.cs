@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Primrose.Content;
+using Primrose.GameCore;
+using Primrose.Base;
+using Primrose.Interface;
 using System;
-using System.Diagnostics;
 
 namespace Primrose
 {
@@ -18,11 +19,13 @@ namespace Primrose
         private BasicEffect effect;
         private GameState gameState;
 
-        private Model knight;
-        private Texture2D knightTexture;
+        private Asset knight;
 
         private KeyboardState prevKBState;
 
+        /// <summary>
+        /// Default constructor for the Game.
+        /// </summary>
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -35,6 +38,9 @@ namespace Primrose
             Window.ClientSizeChanged += OnResize;
         }
 
+        /// <summary>
+        /// Initialization method for the game.
+        /// </summary>
         protected override void Initialize()
         {
             base.Initialize();
@@ -46,15 +52,23 @@ namespace Primrose
             gameState = GameState.Update;
         }
 
+        /// <summary>
+        /// Hub for loading assets and game content in.
+        /// </summary>
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             skybox = new Skybox("Textures/Skybox", Content);
 
-            knight = Content.Load<Model>("knight");
-            knightTexture = Content.Load<Texture2D>("knight_texture");
+            knight = new Asset(
+                Content.Load<Model>("knight"),
+                Content.Load<Texture2D>("knight_texture"));
         }
 
+        /// <summary>
+        /// Per frame logic updating method for the Game.
+        /// </summary>
+        /// <param name="gameTime">GameTime object reference.</param>
         protected override void Update(GameTime gameTime)
         {
             KeyboardState kbState = Keyboard.GetState();
@@ -92,22 +106,27 @@ namespace Primrose
             base.Update(gameTime);
         }
 
+        /// <summary>
+        /// Main render method for the Game.
+        /// </summary>
+        /// <param name="gameTime">GameTime object reference.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            Globals.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullClockwiseFace);
+            // Rendering the skybox.
+            Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullClockwiseFace);
             skybox.Draw(camera.View, camera.Projection, camera.Position);
-            Globals.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
+            Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
+            // Rendering the floor.
             floor.Draw(camera, effect);
 
-            //knight.Draw(Matrix.Identity, camera.View, camera.Projection);
-            Globals.DrawModel(knight, knightTexture, Matrix.Identity, camera.View, camera.Projection);            
+            // Rendering the knight 3D model.s
+            knight.Draw(camera.View, camera.Projection, camera.Position);            
 
             base.Draw(gameTime);
         }
-
 
         /// <summary>
         /// Callback method for when the window is resized

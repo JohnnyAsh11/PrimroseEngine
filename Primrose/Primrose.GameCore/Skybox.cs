@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Primrose.Interface;
 
-namespace Primrose.Content
+namespace Primrose.GameCore
 {
-    public class Skybox
+    public class Skybox : IRender
     {
 
         // Fields:
@@ -29,7 +30,7 @@ namespace Primrose.Content
             _skybox = content.Load<Model>("Models/cube");
             _skyboxEffect = content.Load<Effect>("Shaders/Skybox");
             _skyboxTexture = content.Load<TextureCube>(skyboxTexture);
-            _size = 50f;
+            _size = 100f;
         }
 
         // Methods:

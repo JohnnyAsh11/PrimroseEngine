@@ -4,8 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Primrose
+namespace Primrose.Base
 {
+    /// <summary>
+    /// Enumeration for tracking all of the states of the game.
+    /// </summary>
     public enum GameState
     {
         Pause,

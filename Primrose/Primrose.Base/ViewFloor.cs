@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Primrose.GameCore;
 
-namespace Primrose
+namespace Primrose.Base
 {
     public class ViewFloor
     {
@@ -13,7 +14,16 @@ namespace Primrose
         private int height;
         private VertexBuffer floorBuffer;
         private GraphicsDevice graphics;
-        private Color[] floorColors = new Color[2] { Color.White, Color.Black };
+        private Color[] floorColors = new Color[7] 
+        { 
+            Color.Red, 
+            Color.Orange,
+            Color.Yellow,
+            Color.Green,
+            Color.Blue,
+            Color.Purple,
+            Color.HotPink
+        };
 
         // Properties:
 
@@ -76,7 +86,7 @@ namespace Primrose
                     counter++;
 
                     // Then looping through the returned VertexPositionColors
-                    foreach (VertexPositionColor vertex in FloorTile(x, z, floorColors[counter % 2]))
+                    foreach (VertexPositionColor vertex in FloorTile(x, z, floorColors[counter % 7]))
                     {
                         // And adding them to the vertexList.
                         vertexList.Add(vertex);

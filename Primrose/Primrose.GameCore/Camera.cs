@@ -2,10 +2,11 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using Primrose.Interface;
 
-namespace Primrose
+namespace Primrose.GameCore
 {
-    public class Camera
+    public class Camera : IUpdate
     {
 
         // Fields:
