@@ -179,6 +179,14 @@ namespace Primrose.GameCore
             {
                 direction.X = -1;
             }
+            if (kbState.IsKeyDown(Keys.LeftShift))
+            {
+                direction.Y = -1;
+            }
+            if (kbState.IsKeyDown(Keys.Space))
+            {
+                direction.Y = 1;
+            }
 
             // If the direction has changed in any way.
             if (direction != Vector3.Zero)
