@@ -14,15 +14,13 @@ namespace Primrose.Base
         private int height;
         private VertexBuffer floorBuffer;
         private GraphicsDevice graphics;
-        private Color[] floorColors = new Color[7] 
+        private Color[] floorColors = new Color[5] 
         { 
             Color.Red, 
             Color.Orange,
             Color.Yellow,
             Color.Green,
-            Color.Blue,
-            Color.Purple,
-            Color.HotPink
+            Color.Blue
         };
 
         // Properties:
@@ -86,7 +84,7 @@ namespace Primrose.Base
                     counter++;
 
                     // Then looping through the returned VertexPositionColors
-                    foreach (VertexPositionColor vertex in FloorTile(x, z, floorColors[counter % 7]))
+                    foreach (VertexPositionColor vertex in FloorTile(x, z, floorColors[counter % 5]))
                     {
                         // And adding them to the vertexList.
                         vertexList.Add(vertex);
