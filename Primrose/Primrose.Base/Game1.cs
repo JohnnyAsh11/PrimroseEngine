@@ -16,12 +16,16 @@ namespace Primrose
         private ViewFloor floor;
         private Camera camera;
         private Skybox skybox;
+
         private BasicEffect effect;
+
         private GameState gameState;
 
         private Asset knight;
 
         private KeyboardState prevKBState;
+
+        private Cube cube;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -49,6 +53,8 @@ namespace Primrose
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
             effect = new BasicEffect(_graphics.GraphicsDevice);
 
+            cube = new Cube(new Vector3(0, 1, 0), 1, 1, 1);
+
             gameState = GameState.Update;
         }
 
@@ -63,6 +69,10 @@ namespace Primrose
             knight = new Asset(
                 Content.Load<Model>("knight"),
                 Content.Load<Texture2D>("knight_texture"));
+
+            // Setting the debug Helper class.
+            Helper.Font = Content.Load<SpriteFont>("Arial40");
+            Helper.SpriteBatch = _spriteBatch;
         }
 
         /// <summary>
@@ -81,7 +91,7 @@ namespace Primrose
                     {
                         Exit();
                     }
-                    if (kbState.IsKeyDown(Keys.Space) && prevKBState.IsKeyUp(Keys.Space))
+                    if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
                     {
                         gameState = GameState.Update;
                     }
@@ -91,7 +101,7 @@ namespace Primrose
 
                     camera.Update(gameTime);
 
-                    if (kbState.IsKeyDown(Keys.Space) && prevKBState.IsKeyUp(Keys.Space))
+                    if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
                     {
                         gameState = GameState.Pause;
                     }
@@ -100,7 +110,6 @@ namespace Primrose
                 case GameState.PermEnd:
                     break;
             }
-
 
             prevKBState = kbState;
             base.Update(gameTime);
@@ -123,7 +132,14 @@ namespace Primrose
             floor.Draw(camera, effect);
 
             // Rendering the knight 3D model.s
-            knight.Draw(camera.View, camera.Projection, camera.Position);            
+            //knight.Draw(camera.View, camera.Projection, camera.Position);
+
+            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
+
+            if (gameState == GameState.Pause)
+            {
+                Helper.DrawString("PAUSED", new Vector2(30, 30), Color.Black);
+            }
 
             base.Draw(gameTime);
         }
