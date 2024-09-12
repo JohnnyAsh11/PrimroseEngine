@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
 namespace Primrose.Interface
 {
-    public interface ICollid
+    public interface ICollid : IPosition
     {
         /// <summary>
         /// Checks a collision between two ICollid objects.
