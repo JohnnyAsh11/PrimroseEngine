@@ -9,7 +9,6 @@ namespace Primrose.Base
 {
     public struct Cube : ICollid
     {
-
         // Fields:
         private Vector3 _position;
         private float _width;
@@ -42,6 +41,42 @@ namespace Primrose.Base
         {
             get { return _length; }
             set { _length = value; }
+        }
+
+        /// <summary>
+        /// Get/Set property for the X position.
+        /// </summary>
+        public float X 
+        {
+            get { return _position.X; }
+            set { _position.X = value; }
+        }
+
+        /// <summary>
+        /// Get/Set property for the Y position.
+        /// </summary>
+        public float Y
+        {
+            get { return _position.Y; }
+            set { _position.Y = value; }
+        }
+
+        /// <summary>
+        /// Get/Set property for the Z position.
+        /// </summary>
+        public float Z
+        {
+            get { return _position.Z; }
+            set { _position.Z = value; }
+        }
+
+        /// <summary>
+        /// Get/Set property for the _position field.
+        /// </summary>
+        public Vector3 Position
+        {
+            get { return _position; }
+            set { _position = value; }
         }
 
         // Constructors:
@@ -120,6 +155,9 @@ namespace Primrose.Base
         public bool CheckCollision(ICollid collidable)
         {
             //if ()
+            //{
+            //
+            //}
 
             return false;
         }
@@ -134,160 +172,60 @@ namespace Primrose.Base
         {
             List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
 
+            Renderer renderVertices = new Renderer(graphics);
+
             // Creating the vertices to be put into the buffer for 
             //  rendering all faces of the cube.
             #region first side
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint));
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
             #endregion
             #region second side
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint));
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
             #endregion
             #region third side
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint));
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
             #endregion
             #region fourth side
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint));
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
             #endregion            
             #region top
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint));
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
             #endregion            
             #region bottom
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X + _width, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z), tint));
-            vertexList.Add(
-                new VertexPositionColor(
-                    new Vector3(_position.X, _position.Y, _position.Z + _length), tint));
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
+            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
             #endregion
 
-            // Creating the actual VertexBuffer.
-            VertexBuffer buffer = new VertexBuffer(
-                graphics,
-                VertexPositionColor.VertexDeclaration,
-                vertexList.Count,
-                BufferUsage.None);
-
-            // Setting the data as an actual buffer array.
-            buffer.SetData<VertexPositionColor>(vertexList.ToArray());
-
-            // Creating the shader for the cube.
-            BasicEffect effect = new BasicEffect(graphics);
-
-            // Setting the necessary properties of the BasicEffect shader object.
-            effect.VertexColorEnabled = true;
-            effect.View = camera.View;
-            effect.Projection = camera.Projection;
-            effect.World = Matrix.Identity;
-
-            // Actually Rendering the floor.
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                // Appling the shader
-                pass.Apply();
-
-                // Setting the VertexBuffer
-                graphics.SetVertexBuffer(buffer);
-
-                // Rendering the Primitive triangles.
-                graphics.DrawPrimitives(PrimitiveType.TriangleList, 0, buffer.VertexCount / 3);
-            }
+            renderVertices.Draw(camera);
         }
 
     }
