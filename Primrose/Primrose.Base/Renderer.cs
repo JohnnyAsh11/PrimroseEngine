@@ -34,7 +34,7 @@ namespace Primrose.Base
             _shader = new BasicEffect(_graphics);
         }
 
-        // Methods:
+        // Public Methods:
         /// <summary>
         /// Adds a Vertex Position Color to the Vertex list.
         /// </summary>
@@ -65,7 +65,7 @@ namespace Primrose.Base
             InitBuffer(_graphics);
 
             // Setting the BasicEffect shader.
-            SetShader(cam);
+            SetShaderEffects(cam);
 
             // Actually Rendering the floor.
             foreach (EffectPass pass in _shader.CurrentTechnique.Passes)
@@ -81,11 +81,12 @@ namespace Primrose.Base
             }
         }
 
+        // Private Methods:
         /// <summary>
         /// Sets all of the shader's fields.
         /// </summary>
         /// <param name="cam">Camera to pull matrix data from.</param>
-        private void SetShader(Camera cam)
+        private void SetShaderEffects(Camera cam)
         {
             _shader.VertexColorEnabled = true;
             _shader.View = cam.View;
