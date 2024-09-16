@@ -1,3 +1,3 @@
-﻿
-using var game = new Primrose.Game1();
+﻿using Primrose;
+using var game = new Game1();
 game.Run();

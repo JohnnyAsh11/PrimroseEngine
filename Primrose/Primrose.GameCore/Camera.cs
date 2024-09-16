@@ -1,11 +1,14 @@
-﻿
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using Primrose.Interface;
 
 namespace Primrose.GameCore
 {
+    /// <summary>
+    /// Updates several matrices for everything to be rendered with proper projections and viewports.
+    /// Does not natively have any optimizational processes.
+    /// </summary>
     public class Camera : IUpdate
     {
 
@@ -154,7 +157,7 @@ namespace Primrose.GameCore
         /// <param name="gameTime">reference to the current GameTime object.</param>
         public void Update(GameTime gameTime)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             KeyboardState kbState = Keyboard.GetState();
             Vector3 direction = Vector3.Zero;
             Vector3 velocity = Vector3.Zero;
@@ -195,7 +198,7 @@ namespace Primrose.GameCore
                 direction = Vector3.Normalize(direction);
 
                 // Calculate the velocity.
-                velocity = direction * (dt * _cameraSpeed);
+                velocity = direction * (deltaTime * _cameraSpeed);
 
                 // And move according to that velocity vector.
                 Move(velocity);
@@ -212,8 +215,8 @@ namespace Primrose.GameCore
                 deltaY = _currentMouseState.Y - (_graphics.Viewport.Height / 2);
 
                 // Calculating the rotation buffers.
-                _mouseRotationBuffer.X -= 0.05f * deltaX * dt;
-                _mouseRotationBuffer.Y -= 0.05f * deltaY * dt;
+                _mouseRotationBuffer.X -= 0.05f * deltaX * deltaTime;
+                _mouseRotationBuffer.Y -= 0.05f * deltaY * deltaTime;
                 
                 // Clamping the rotation buffers to avoid crazy screen movement.
                 if (_mouseRotationBuffer.Y < MathHelper.ToRadians(-75.0f))

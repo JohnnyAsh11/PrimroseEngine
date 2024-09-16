@@ -1,15 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Primrose.Interface;
 
 namespace Primrose.GameCore
 {
+    /// <summary>
+    /// Wraps the a Model object with logic for textures and rendering.
+    /// </summary>
     public class Asset : IRender
     {
 

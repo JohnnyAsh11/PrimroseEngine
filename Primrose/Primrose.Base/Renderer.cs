@@ -1,11 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Primrose.GameCore;
-using System;
 using System.Collections.Generic;
 
 namespace Primrose.Base
 {
+    /// <summary>
+    /// Creates a VertexBuffer and renders its vertices to the game window.
+    /// </summary>
     public class Renderer
     {
         // Fields:

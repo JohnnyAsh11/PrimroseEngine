@@ -3,11 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Primrose.GameCore;
 using Primrose.Base;
-using Primrose.Interface;
 using System;
 
 namespace Primrose
 {
+    /// <summary>
+    /// Creates instances of the actual game itself.
+    /// </summary>
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
@@ -17,8 +19,6 @@ namespace Primrose
         private Camera camera;
         private Skybox skybox;
 
-        private BasicEffect effect;
-
         private GameState gameState;
 
         private Asset knight;
@@ -26,6 +26,7 @@ namespace Primrose
         private KeyboardState prevKBState;
 
         private Cube cube;
+        private Cube cube2;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -51,9 +52,9 @@ namespace Primrose
 
             camera = new Camera(_graphics.GraphicsDevice, new Vector3(10.0f, 1.0f, 5.0f), Vector3.Zero, 5.0f);
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
-            effect = new BasicEffect(_graphics.GraphicsDevice);
 
             cube = new Cube(new Vector3(0, 1, 0), 1, 1, 1);
+            cube2 = new Cube(new Vector3(20, 1, 10), 4, 4, 4);
 
             gameState = GameState.Update;
         }
@@ -129,12 +130,13 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             // Rendering the floor.
-            floor.Draw(camera, effect);
+            floor.Draw(camera);
 
             // Rendering the knight 3D model.s
             //knight.Draw(camera.View, camera.Projection, camera.Position);
 
             cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
+            cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
 
             if (gameState == GameState.Pause)
             {

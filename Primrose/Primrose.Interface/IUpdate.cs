@@ -2,6 +2,9 @@
 
 namespace Primrose.Interface
 {
+    /// <summary>
+    /// Contains the definitions of an object that has frame to frame logic updating.
+    /// </summary>
     public interface IUpdate
     {
         /// <summary>

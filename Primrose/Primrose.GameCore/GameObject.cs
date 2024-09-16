@@ -1,15 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Primrose.Interface;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace Primrose.GameCore
 {
+    /// <summary>
+    /// Abstract GameObject class that defines the logic for objects that exist in the world space.
+    /// </summary>
     public abstract class GameObject : IGameObject
     {
 
         // Fields:
-        protected ICollid _collider;
+        protected ICollide _collider;
         protected Asset _asset;
         protected Vector3 _position;
 
@@ -17,7 +18,7 @@ namespace Primrose.GameCore
         /// <summary>
         /// Get/Set property for the position of the GameObject.
         /// </summary>
-        public ICollid Collider
+        public ICollide Collider
         {
             get { return _collider; }
             set { _collider = value; }
@@ -39,7 +40,7 @@ namespace Primrose.GameCore
         /// <param name="collider">The collision detector for an instance of a GameObject.</param>
         /// <param name="asset">The rendering asset for an instance of a GameObject.</param>
         /// <param name="position">The position of the GameObject.</param>
-        public GameObject(ICollid collider, Asset asset, Vector3 position)
+        public GameObject(ICollide collider, Asset asset, Vector3 position)
         {
             _collider = collider;
             _asset = asset;
@@ -51,7 +52,7 @@ namespace Primrose.GameCore
         /// </summary>
         /// <param name="collider">The collision detector for an instance of a GameObject.</param>
         /// <param name="asset">The rendering asset for an instance of a GameObject.</param>
-        public GameObject(ICollid collider, Asset asset)
+        public GameObject(ICollide collider, Asset asset)
         {
             _collider = collider;
             _asset = asset;

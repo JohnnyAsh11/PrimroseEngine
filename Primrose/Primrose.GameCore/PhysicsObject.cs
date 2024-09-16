@@ -9,6 +9,9 @@ using Primrose.Interface;
 
 namespace Primrose.GameCore
 {
+    /// <summary>
+    /// Extends the logic of a GameObject to be non-static in the gamespace and have physics.
+    /// </summary>
     public abstract class PhysicsObject : GameObject, IPhysical
     {
 
@@ -43,7 +46,7 @@ namespace Primrose.GameCore
         /// <param name="mass">The float mass of the PhysicsObject.</param>
         /// <param name="mass">The float mass of the PhysicsObject.</param>
         /// <param name="maxSpeed">The float max speed of the PhysicsObject.</param>
-        public PhysicsObject(ICollid collider, Asset asset, Vector3 position, Vector3 maxForce, float mass, float maxSpeed)
+        public PhysicsObject(ICollide collider, Asset asset, Vector3 position, Vector3 maxForce, float mass, float maxSpeed)
             : base(collider, asset, position)
         {
             _totalForce = Vector3.Zero;
@@ -64,7 +67,7 @@ namespace Primrose.GameCore
         /// <param name="position">The Vector3 starting position of the PhysicsObject.</param>
         /// <param name="maxForce">The Vector3 max force that this PhysicsObject can have applied to it.</param>
         /// <param name="mass">The float mass of the PhysicsObject.</param>
-        public PhysicsObject(ICollid collider, Asset asset, Vector3 position, Vector3 maxForce, float mass)
+        public PhysicsObject(ICollide collider, Asset asset, Vector3 position, Vector3 maxForce, float mass)
             : base(collider, asset, position)
         {
             _totalForce = Vector3.Zero;
@@ -84,7 +87,7 @@ namespace Primrose.GameCore
         /// <param name="asset">Asset object for the PhysicsObject.</param>
         /// <param name="position">The Vector3 starting position of the PhysicsObject.</param>
         /// <param name="maxForce">The Vector3 max force that this PhysicsObject can have applied to it</param>
-        public PhysicsObject(ICollid collider, Asset asset, Vector3 position, Vector3 maxForce)
+        public PhysicsObject(ICollide collider, Asset asset, Vector3 position, Vector3 maxForce)
             : base(collider, asset, position)
         {
             _totalForce = Vector3.Zero;
@@ -103,7 +106,7 @@ namespace Primrose.GameCore
         /// <param name="collider">Collider for the PhysicsObject.</param>
         /// <param name="asset">Asset object for the PhysicsObject.</param>
         /// <param name="position">The Vector3 starting position of the PhysicsObject.</param>
-        public PhysicsObject(ICollid collider, Asset asset, Vector3 position)
+        public PhysicsObject(ICollide collider, Asset asset, Vector3 position)
             : base(collider, asset, position)
         {
             _totalForce = Vector3.Zero;
@@ -121,7 +124,7 @@ namespace Primrose.GameCore
         /// </summary>
         /// <param name="collider">Collider for the PhysicsObject.</param>
         /// <param name="asset">Asset object for the PhysicsObject.</param>
-        public PhysicsObject(ICollid collider, Asset asset)
+        public PhysicsObject(ICollide collider, Asset asset)
             : base(collider, asset)
         {
             _totalForce = Vector3.Zero;

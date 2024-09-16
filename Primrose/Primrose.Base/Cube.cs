@@ -7,7 +7,10 @@ using System;
 
 namespace Primrose.Base
 {
-    public struct Cube : ICollid
+    /// <summary>
+    /// Defines a Cube in space that defines a position, dimensions and collidability.
+    /// </summary>
+    public struct Cube : ICollide
     {
         // Fields:
         private Vector3 _position;
@@ -152,13 +155,8 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="collidable">The other collidable object.</param>
         /// <returns>Whether or not a collision has occured.</returns>
-        public bool CheckCollision(ICollid collidable)
+        public bool CheckCollision(ICollide collidable)
         {
-            //if ()
-            //{
-            //
-            //}
-
             return false;
         }
 

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Primrose.Interface
+﻿namespace Primrose.Interface
 {
+    /// <summary>
+    /// an IUpdate object that also contains definitions for physics objects.
+    /// </summary>
     public interface IPhysical : IUpdate
     {
         /// <summary>
