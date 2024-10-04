@@ -134,7 +134,7 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             // Rendering the knight 3D models.
-            knight.Draw(camera.View, camera.Projection, camera.ThirdPersonPosition);
+            knight.Draw(camera.View, camera.Projection, camera.Position);
 
             //cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
             cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
@@ -147,9 +147,7 @@ namespace Primrose
 
             // Rendering the floor.
             floor.Draw(camera);
-                Helper.DrawString("PAUSED", new Vector2(30, 30), Color.Black);
-            }
-
+            
             base.Draw(gameTime);
         }
 
