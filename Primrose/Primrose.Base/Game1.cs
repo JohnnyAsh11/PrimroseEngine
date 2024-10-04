@@ -26,7 +26,6 @@ namespace Primrose
         private KeyboardState prevKBState;
 
         private Cube cube;
-        private Cube cube2;
 
         private Renderer circleRenderer;
         /// <summary>
@@ -54,8 +53,7 @@ namespace Primrose
             camera = new Camera(_graphics.GraphicsDevice, new Vector3(10.0f, 1.0f, 5.0f), Vector3.Zero, 5.0f);
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
 
-            cube = new Cube(new Vector3(0, 1, 0), 1, 1, 1);
-            cube2 = new Cube(new Vector3(20, 1, 10), 4, 4, 4);
+            cube = new Cube(new Vector3(20, 1, 10), 4, 4, 4);
 
             gameState = GameState.Update;
 
@@ -134,16 +132,19 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             // Rendering the knight 3D models.
-            knight.Draw(camera.View, camera.Projection, camera.Position);
+            knight.Draw(
+                camera.View, 
+                camera.Projection, 
+                camera.Position,
+                Matrix.CreateRotationY((float)(camera.Rotation.Y * Math.PI)));
 
             //cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
-            cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
+            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
 
             circleRenderer.Draw(camera);
             //knight.Draw(camera.View, camera.Projection, camera.Position);
 
-            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
-            cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
+            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Red);
 
             // Rendering the floor.
             floor.Draw(camera);

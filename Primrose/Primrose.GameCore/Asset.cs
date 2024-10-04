@@ -49,11 +49,53 @@ namespace Primrose.GameCore
         {
             if (_texture is null)
             {
-                DrawModel(_content, Matrix.Identity, view, projection);
+                DrawModel(
+                    _content,
+                    Matrix.Identity,
+                    view,
+                    projection);
             }
             else
             {
-                DrawModel(_content, _texture, Matrix.Identity, view, projection);
+                DrawModel(
+                    _content,
+                    _texture,
+                    Matrix.Identity, 
+                    view, 
+                    projection);
+            }
+        }
+        /// <summary>
+        /// Renders the passed in model to the game window.
+        /// </summary>
+        /// <param name="view">The camera instance's view matrix.</param>
+        /// <param name="projection">The camera instance's projection matrix.</param>
+        /// <param name="cameraPosition">The camera instance's position.</param>
+        /// <param name="rotationMatrix">The rotation matrix of the asset.</param>
+        public void Draw(
+            Matrix view,
+            Matrix projection,
+            Vector3 cameraPosition,
+            Matrix rotationMatrix)
+        {
+            Matrix world = rotationMatrix;
+
+            if (_texture is null)
+            {
+                DrawModel(
+                    _content,
+                    world,
+                    view,
+                    projection);
+            }
+            else
+            {
+                DrawModel(
+                    _content,
+                    _texture,
+                    world, 
+                    view, 
+                    projection);
             }
         }
 
