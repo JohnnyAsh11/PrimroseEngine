@@ -146,7 +146,7 @@ namespace Primrose.GameCore
         /// Helper Method.  Actually moves the camera with the calculated values.
         /// </summary>
         /// <param name="velocity">The speed and direction in which the camera is moving to.</param>
-        private void Move(Vector3 velocity)
+        public void Move(Vector3 velocity)
         {
             MoveTo(PreviewMove(velocity), Rotation);
         }
@@ -163,46 +163,6 @@ namespace Primrose.GameCore
             Vector3 velocity = Vector3.Zero;
             float deltaX;
             float deltaY;
-
-            // - - Movement transformations - -
-            // Checking keyboard input.
-            if (kbState.IsKeyDown(Keys.W))
-            {
-                direction.Z = 1;
-            }
-            if (kbState.IsKeyDown(Keys.S))
-            {
-                direction.Z = -1;
-            }
-            if (kbState.IsKeyDown(Keys.A))
-            {
-                direction.X = 1;
-            }
-            if (kbState.IsKeyDown(Keys.D))
-            {
-                direction.X = -1;
-            }
-            if (kbState.IsKeyDown(Keys.LeftShift))
-            {
-                direction.Y = -1;
-            }
-            if (kbState.IsKeyDown(Keys.Space))
-            {
-                direction.Y = 1;
-            }
-
-            // If the direction has changed in any way.
-            if (direction != Vector3.Zero)
-            {
-                // Normalize the vector.
-                direction = Vector3.Normalize(direction);
-
-                // Calculate the velocity.
-                velocity = direction * (deltaTime * _cameraSpeed);
-
-                // And move according to that velocity vector.
-                Move(velocity);
-            }
 
             // - - Mouse Transformations - -
             // Getting the current mouse state.

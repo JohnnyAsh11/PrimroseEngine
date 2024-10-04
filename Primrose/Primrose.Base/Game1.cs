@@ -16,18 +16,13 @@ namespace Primrose
         private SpriteBatch _spriteBatch;
 
         private ViewFloor floor;
-        private Camera camera;
         private Skybox skybox;
 
         private GameState gameState;
-
-        private Asset knight;
-
         private KeyboardState prevKBState;
 
-        private Cube cube;
+        private Player player;
 
-        private Renderer circleRenderer;
         /// <summary>
         /// Default constructor for the Game.
         /// </summary>
@@ -50,15 +45,9 @@ namespace Primrose
         {
             base.Initialize();
 
-            camera = new Camera(_graphics.GraphicsDevice, new Vector3(10.0f, 1.0f, 5.0f), Vector3.Zero, 5.0f);
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
 
-            cube = new Cube(new Vector3(20, 1, 10), 4, 4, 4);
-
             gameState = GameState.Update;
-
-            circleRenderer = new Renderer(_graphics.GraphicsDevice);
-            circleRenderer.SetCircleVertices(new Vector3(10, 0, 15), Color.CornflowerBlue, 8, 2);
         }
 
         /// <summary>
@@ -69,9 +58,13 @@ namespace Primrose
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             skybox = new Skybox("Textures/Skybox", Content);
 
-            knight = new Asset(
-                Content.Load<Model>("knight"),
-                Content.Load<Texture2D>("knight_texture"));
+            player = new Player(
+                new Cube(),
+                new Asset(
+                    Content.Load<Model>("knight"),
+                    Content.Load<Texture2D>("knight_texture")),
+                _graphics.GraphicsDevice,
+                new Vector3(10f, 2.0f, 10f));
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
@@ -102,7 +95,7 @@ namespace Primrose
                     break;
                 case GameState.Update:
 
-                    camera.Update(gameTime);
+                    player.Update(gameTime);
 
                     if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
                     {
@@ -128,26 +121,13 @@ namespace Primrose
 
             // Rendering the skybox.
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullClockwiseFace);
-            skybox.Draw(camera.View, camera.Projection, camera.Position);
+            skybox.Draw(player.Camera.View, player.Camera.Projection, player.Camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            // Rendering the knight 3D models.
-            knight.Draw(
-                camera.View, 
-                camera.Projection, 
-                camera.Position,
-                Matrix.CreateRotationY((float)(camera.Rotation.Y * Math.PI)));
-
-            //cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
-            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
-
-            circleRenderer.Draw(camera);
-            //knight.Draw(camera.View, camera.Projection, camera.Position);
-
-            cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Red);
+            player.Draw();
 
             // Rendering the floor.
-            floor.Draw(camera);
+            floor.Draw(player.Camera);
             
             base.Draw(gameTime);
         }

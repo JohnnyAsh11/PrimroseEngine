@@ -72,7 +72,7 @@ namespace Primrose.GameCore
         /// <param name="view">The camera's view matrix.</param>
         /// <param name="projection">The camera's projection matrix.</param>
         /// <param name="cameraPosition">The camera's current position.</param>
-        public abstract void Draw(Matrix view, Matrix projection, Vector3 cameraPosition);
+        public virtual void Draw(Matrix view, Matrix projection, Vector3 cameraPosition) { }
 
     }
 }
