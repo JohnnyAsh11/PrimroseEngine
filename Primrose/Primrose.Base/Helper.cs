@@ -62,19 +62,19 @@ namespace Primrose.Base
         /// <param name="spriteBatch">SpriteBatch reference to render the message.</param>
         public static void DrawString(string message, Vector2 location, Color tint)
         {
+            // Assuring that the SpriteBatch object is not null.
             if (_spriteBatch is null)
             {
                 throw new Exception("Helper's SpriteBatch reference is null.");
             }
 
+            // Rendering the text to the screen.
             _spriteBatch.Begin();
-
             _spriteBatch.DrawString(
                 _font,
                 message,
                 location,
                 tint);
-
             _spriteBatch.End();
         }
 

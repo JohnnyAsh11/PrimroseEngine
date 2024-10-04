@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Primrose.GameCore;
 using System.Collections.Generic;
+using System;
 
 namespace Primrose.Base
 {
@@ -111,6 +112,58 @@ namespace Primrose.Base
 
             // Setting the data as an actual buffer array.
             _buffer.SetData<VertexPositionColor>(_vertices.ToArray());
+        }
+
+        /// <summary>
+        /// Calculates and creates the vertices for a circle mesh.
+        /// </summary>
+        /// <param name="origin">Origin point of the circle.</param>
+        /// <param name="color">Color of the circle being rendered.</param>
+        /// <param name="subdivisions">The number of subdivisions for the circle</param>
+        /// <param name="radius">Radius of the circle being rendered.</param>
+        public List<VertexPositionColor> SetCircleVertices(Vector3 origin, Color color, int subdivisions, float radius)
+        {
+            // Clear the vertices before setting them.
+            if (_vertices.Count > 0)
+            {
+                _vertices.Clear();
+            }
+
+            // Making sure that there is a valid number of subdivisions
+            if (subdivisions < 4)
+            {
+                subdivisions = 4;
+            }
+
+            // Declaring some general use variables for the next part of the process.
+            List<VertexPositionColor> tempVertices = new List<VertexPositionColor>();
+            float deltaAngle = (2.0f * MathHelper.Pi) / subdivisions;
+            float xCalc = 0;
+            float yCalc = 0;
+
+            // Looping through all of the subdivisions and calculating the circle locations.
+            for (int i = 0; i < subdivisions; i++)
+            {
+                xCalc = (float)Math.Cos(deltaAngle * i) * radius;
+                yCalc = (float)Math.Sin(deltaAngle * i) * radius;
+
+                tempVertices.Add(new VertexPositionColor(
+                    new Vector3(
+                        xCalc + origin.X, 
+                        yCalc + origin.Y, 
+                        0.00f + origin.Z),
+                    color));
+            }
+
+            // Adding all of the vertices in the proper order to the _vertices list.
+            for (int i = 0; i < subdivisions; i++)
+            {
+                _vertices.Add(new VertexPositionColor(origin, color));
+                _vertices.Add(tempVertices[i]);
+                _vertices.Add(tempVertices[(i + 1) % subdivisions]);
+            }
+
+            return tempVertices;
         }
     }
 }

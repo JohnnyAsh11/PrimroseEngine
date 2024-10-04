@@ -28,6 +28,7 @@ namespace Primrose
         private Cube cube;
         private Cube cube2;
 
+        private Renderer circleRenderer;
         /// <summary>
         /// Default constructor for the Game.
         /// </summary>
@@ -57,6 +58,9 @@ namespace Primrose
             cube2 = new Cube(new Vector3(20, 1, 10), 4, 4, 4);
 
             gameState = GameState.Update;
+
+            circleRenderer = new Renderer(_graphics.GraphicsDevice);
+            circleRenderer.SetCircleVertices(new Vector3(10, 0, 15), Color.CornflowerBlue, 8, 2);
         }
 
         /// <summary>
@@ -129,17 +133,20 @@ namespace Primrose
             skybox.Draw(camera.View, camera.Projection, camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            // Rendering the floor.
-            floor.Draw(camera);
+            // Rendering the knight 3D models.
+            knight.Draw(camera.View, camera.Projection, camera.ThirdPersonPosition);
 
-            // Rendering the knight 3D model.s
+            //cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
+            cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
+
+            circleRenderer.Draw(camera);
             //knight.Draw(camera.View, camera.Projection, camera.Position);
 
             cube.DebugDraw(_graphics.GraphicsDevice, camera, Color.Purple);
             cube2.DebugDraw(_graphics.GraphicsDevice, camera, Color.BlueViolet);
 
-            if (gameState == GameState.Pause)
-            {
+            // Rendering the floor.
+            floor.Draw(camera);
                 Helper.DrawString("PAUSED", new Vector2(30, 30), Color.Black);
             }
 
