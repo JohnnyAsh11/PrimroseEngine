@@ -15,13 +15,10 @@ namespace Primrose.Base
         private int _width;
         private int _height;
         private Renderer _renderer;
-        private Color[] _floorColors = new Color[5] 
+        private Color[] _floorColors = new Color[2] 
         { 
-            Color.Red, 
-            Color.Orange,
-            Color.Yellow,
-            Color.Green,
-            Color.Blue
+            Color.Black, 
+            Color.White
         };
 
         // Properties: - NONE -
@@ -79,7 +76,7 @@ namespace Primrose.Base
                     counter++;
 
                     // Creating the vertices.
-                    CreateVertices(x, z, _floorColors[counter % 5]);
+                    CreateVertices(x, z, _floorColors[counter % 2]);
                 }
             }
         }
