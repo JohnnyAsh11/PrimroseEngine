@@ -9,7 +9,7 @@ namespace Primrose.GameCore
     /// Updates several matrices for everything to be rendered with proper projections and viewports.
     /// Does not natively have any optimizational processes.
     /// </summary>
-    public class Camera : IUpdate
+    public class Camera
     {
 
         // Fields:
@@ -149,61 +149,6 @@ namespace Primrose.GameCore
         public void Move(Vector3 velocity)
         {
             MoveTo(PreviewMove(velocity), Rotation);
-        }
-
-        /// <summary>
-        /// Logic update method for the camera class.
-        /// </summary>
-        /// <param name="gameTime">reference to the current GameTime object.</param>
-        public void Update(GameTime gameTime)
-        {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            KeyboardState kbState = Keyboard.GetState();
-            Vector3 direction = Vector3.Zero;
-            Vector3 velocity = Vector3.Zero;
-            float deltaX;
-            float deltaY;
-
-            // - - Mouse Transformations - -
-            // Getting the current mouse state.
-            _currentMouseState = Mouse.GetState();
-
-            if (_currentMouseState != _previousMouseState)
-            {
-                // Calculating the change in mouse position.
-                deltaX = _currentMouseState.X - (_graphics.Viewport.Width / 2);
-                deltaY = _currentMouseState.Y - (_graphics.Viewport.Height / 2);
-
-                // Calculating the rotation buffers.
-                _mouseRotationBuffer.X -= 0.05f * deltaX * deltaTime;
-                _mouseRotationBuffer.Y -= 0.05f * deltaY * deltaTime;
-                
-                // Clamping the rotation buffers to avoid crazy screen movement.
-                if (_mouseRotationBuffer.Y < MathHelper.ToRadians(-75.0f))
-                {
-                    _mouseRotationBuffer.Y =
-                        _mouseRotationBuffer.Y -
-                        (_mouseRotationBuffer.Y - MathHelper.ToRadians(-75.0f));
-                }
-                if (_mouseRotationBuffer.Y > MathHelper.ToRadians(75.0f))
-                {
-                    _mouseRotationBuffer.Y =
-                        _mouseRotationBuffer.Y -
-                        (_mouseRotationBuffer.Y - MathHelper.ToRadians(75.0f));
-                }
-
-                // Calculating the new rotation vector based off of the calculated values.
-                Rotation = new Vector3(
-                    -MathHelper.Clamp(_mouseRotationBuffer.Y, MathHelper.ToRadians(-75.0f), MathHelper.ToRadians(75.0f)),
-                    MathHelper.WrapAngle(_mouseRotationBuffer.X),
-                    0);
-            }
-
-            // Setting the mouse position to be static in the center of the screen.
-            Mouse.SetPosition(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
-
-            // Setting the previous mouse state.
-            _previousMouseState = _currentMouseState;
         }
     }
 }
