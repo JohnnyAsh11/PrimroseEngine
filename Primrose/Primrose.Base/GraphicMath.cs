@@ -69,6 +69,25 @@ namespace Primrose.Base
         }
 
         /// <summary>
+        /// Converts a Vector4 into a Vector3 by removing the W value.
+        /// </summary>
+        /// <param name="vec4">Vector4 being converted to a Vector3.</param>
+        /// <returns>A Vector3 with the Vector4's X, Y and Z values.</returns>
+        public static Vector3 ToVector3(Vector4 vec4)
+        {
+            return new Vector3(vec4.X, vec4.Y, vec4.Z);
+        }
+        /// <summary>
+        /// Converts a Vector2 into a Vector3 by adding 0 for the Z value.
+        /// </summary>
+        /// <param name="vec2">Vector3 being converted to a Vector3.</param>
+        /// <returns>A Vector3 with the Vector2's X and Y values.</returns>
+        public static Vector3 ToVector3(Vector2 vec2)
+        {
+            return new Vector3(vec2.X, vec2.Y, 0.0f);
+        }
+
+        /// <summary>
         /// Wraps the Vector4.Transform method within the 
         /// GraphicMath class for simplicity and consistency.
         /// </summary>
@@ -78,6 +97,21 @@ namespace Primrose.Base
         public static Vector4 ApplyRotationMatrix(Matrix matrix, Vector4 position)
         {
             return Vector4.Transform(position, matrix);
+        }
+
+        /// <summary>
+        /// Applies the Rotation Matrix and then the Transformation Matrix to a Vector4.
+        /// </summary>
+        /// <param name="rotationMatrix">Rotation matrix applied to the Vector4.</param>
+        /// <param name="transformMatrix">Transformation matrix applied to the Vector4.</param>
+        /// <param name="position">Vector4 position being transformed.</param>
+        /// <returns>The transformed Vector4 position.</returns>
+        public static Vector4 ApplyMatrices(Matrix rotationMatrix, Matrix transformMatrix, Vector4 position)
+        {
+            position = Vector4.Transform(position, rotationMatrix);
+            position = Vector4.Transform(position, transformMatrix);
+
+            return position;
         }
     }
 }

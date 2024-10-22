@@ -34,7 +34,7 @@ namespace Primrose.Base
 
             _shader.View = Matrix.CreateLookAt(
                 new Vector3(50, 50, 50), 
-                new Vector3(0, 0, 0), 
+                new Vector3(25, 25, 25), 
                 Vector3.Up);
 
             _shader.Projection = Matrix.CreatePerspectiveFieldOfView(

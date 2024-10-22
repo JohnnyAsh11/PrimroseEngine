@@ -110,6 +110,7 @@ namespace Primrose.Base
             _vertices.Add(
                 new VertexPositionColor(p4, color));
 
+            // Creating the wire mesh.
             _lines.Add(new Line(_graphics, p1, p2));
             _lines.Add(new Line(_graphics, p2, p3));
             _lines.Add(new Line(_graphics, p4, p3));
@@ -136,6 +137,13 @@ namespace Primrose.Base
 
             // Setting the BasicEffect shader.
             SetShaderEffects(cam);
+
+            // If the buffer is null;
+            if (_buffer is null)
+            {
+                // Then throw an exception.
+                throw new Exception("ERROR: Vertex buffer is null.  There is nothing to render.");
+            }
 
             // Actually Rendering the floor.
             foreach (EffectPass pass in _shader.CurrentTechnique.Passes)
@@ -176,6 +184,11 @@ namespace Primrose.Base
         /// <param name="graphics">GraphicsDevices used to create a VertexBuffer.</param>
         private void InitBuffer(GraphicsDevice graphics)
         {
+            if (_vertices.Count == 0)
+            {
+                return;
+            }
+
             // Creating the actual VertexBuffer.
             _buffer = new VertexBuffer(
                 graphics,
@@ -234,6 +247,78 @@ namespace Primrose.Base
                     tempVertices[i],
                     tempVertices[(i + 1) % subdivisions],
                     color);
+            }
+        }
+
+        /// <summary>
+        /// Creates all of the vertices for rendering a sphere primitive.
+        /// </summary>
+        /// <param name="origin">The origin position of the Sphere.</param>
+        /// <param name="color">The color of the sphere primitive.</param>
+        /// <param name="hori_Subdivisions"></param>
+        /// <param name="vert_Subdivisions"></param>
+        /// <param name="radius"></param>
+        public void SetSphereVertices(Vector3 origin, Color color, int hori_Subdivisions, int vert_Subdivisions, float radius)
+        {
+            // Clear the vertices before setting them.
+            if (_vertices.Count > 0)
+            {
+                _vertices.Clear();
+            }
+
+            // Making sure that there is a valid number of subdivisions
+            if (hori_Subdivisions < 4)
+            {
+                hori_Subdivisions = 4;
+            }
+
+            // Declaring some general use variables for the next part of the process.
+            List<Vector4> tempVertices = new List<Vector4>();
+            float deltaAngle = (2.0f * MathHelper.Pi) / hori_Subdivisions;
+            float xCalc = 0;
+            float yCalc = 0;
+
+            // Looping through all of the subdivisions and calculating the circle locations.
+            for (int i = 0; i < hori_Subdivisions; i++)
+            {
+                xCalc = (float)Math.Cos(deltaAngle * i) * radius;
+                yCalc = (float)Math.Sin(deltaAngle * i) * radius;
+
+                Vector4 vertex = new Vector4(
+                        xCalc,
+                        yCalc,
+                        0.00f,
+                        1.0f);
+
+                tempVertices.Add(vertex);
+            }
+
+            // Adding all of the vertices in the proper order to the _vertices list.
+            Matrix previousMatrix = Matrix.Identity;
+            Matrix transformMatrix = Matrix.CreateTranslation(origin);
+            float rotationDelta = (2.0f * MathHelper.Pi) / vert_Subdivisions;
+            for (int i = 0; i < vert_Subdivisions + 1; i++)
+            {
+                Matrix rotationMatrix = Matrix.CreateRotationY(rotationDelta * i);
+
+                for (int j = 0; j < hori_Subdivisions; j++)
+                {
+                    // Applying transformations to the sphere vertices.
+                    Vector4 p1 = GraphicMath.ApplyMatrices(previousMatrix, transformMatrix, tempVertices[(j + 1) % hori_Subdivisions]);
+                    Vector4 p2 = GraphicMath.ApplyMatrices(previousMatrix, transformMatrix, tempVertices[j]);
+                    Vector4 p3 = GraphicMath.ApplyMatrices(rotationMatrix, transformMatrix, tempVertices[j]);
+                    Vector4 p4 = GraphicMath.ApplyMatrices(rotationMatrix, transformMatrix, tempVertices[(j + 1) % hori_Subdivisions]);
+
+                    // Adding the vertices to the renderer vertex list.
+                    AddQuad(
+                        GraphicMath.ToVector3(p1),
+                        GraphicMath.ToVector3(p2),
+                        GraphicMath.ToVector3(p3),
+                        GraphicMath.ToVector3(p4),
+                        color);
+                }
+
+                previousMatrix = rotationMatrix;
             }
         }
     }

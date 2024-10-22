@@ -71,11 +71,12 @@ namespace Primrose
             cube = new Cube(1.0f, 1.0f, 1.0f);
 
             _renderer = new Renderer(_graphics.GraphicsDevice);
-            _renderer.SetCircleVertices(
+            _renderer.SetSphereVertices(
                 new Vector3(10.0f, 3.0f, 20.0f),
                 Color.Chartreuse,
-                16,
-                3);
+                32,
+                32,
+                2);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
