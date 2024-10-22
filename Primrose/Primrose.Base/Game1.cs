@@ -139,7 +139,7 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             //player.Draw();
-            //cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan);
+            cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan);
             _renderer.Draw(player.Camera);
 
             // Rendering the floor.

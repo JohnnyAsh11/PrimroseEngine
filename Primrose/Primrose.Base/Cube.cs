@@ -171,7 +171,7 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="graphics">Graphics device used to render the cube's faces.</param>
         /// <param name="color">Color to render the cube as.</param>
-        private void SetRenderVertices(GraphicsDevice graphics, Color color)
+        public void SetRenderVertices(GraphicsDevice graphics, Color color)
         {
             List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
 
@@ -185,57 +185,57 @@ namespace Primrose.Base
             _renderer.AddQuad(
                 new Vector3(_position.X, _position.Y, _position.Z),
                 new Vector3(_position.X + _width, _position.Y, _position.Z),
-                new Vector3(_position.X, _position.Y + _height, _position.Z),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
+                new Vector3(_position.X, _position.Y + _height, _position.Z),
                 color);
 
             // Second side.
             _renderer.AddQuad(
                 new Vector3(_position.X + _width, _position.Y, _position.Z),
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
-                new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
                 color);
 
             // Third side.
             _renderer.AddQuad(
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
-                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X, _position.Y, _position.Z + _length),
+                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
                 color);
 
             // Fourth side.
             _renderer.AddQuad(
                 new Vector3(_position.X, _position.Y + _height, _position.Z),
                 new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
-                new Vector3(_position.X, _position.Y, _position.Z),
                 new Vector3(_position.X, _position.Y, _position.Z + _length),
+                new Vector3(_position.X, _position.Y, _position.Z),
                 color);
 
             // Top.
             _renderer.AddQuad(
                 new Vector3(_position.X, _position.Y + _height, _position.Z),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
-                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
                 color);
 
             // Bottom.
             _renderer.AddQuad(
                 new Vector3(_position.X, _position.Y, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
-                new Vector3(_position.X, _position.Y, _position.Z),
                 new Vector3(_position.X + _width, _position.Y, _position.Z),
+                new Vector3(_position.X, _position.Y, _position.Z),
                 color);
         }
 
         /// <summary>
-        /// 
+        /// Renders the Cube's mesh to the window.
         /// </summary>
-        /// <param name="graphics"></param>
-        /// <param name="camera"></param>
-        /// <param name="color"></param>
+        /// <param name="graphics">Graphics device reference for render calls.</param>
+        /// <param name="camera">Camera used for matrices and renderer calls.</param>
+        /// <param name="color">Color of the primitive in the world.</param>
         public void Draw(GraphicsDevice graphics, Camera camera, Color color)
         {
             // Making sure that the renderer is not null.

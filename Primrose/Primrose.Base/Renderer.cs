@@ -100,20 +100,20 @@ namespace Primrose.Base
             _vertices.Add(
                 new VertexPositionColor(p2, color));
             _vertices.Add(
-                new VertexPositionColor(p3, color));
+                new VertexPositionColor(p4, color));
 
             // Second triangle.
             _vertices.Add(
                 new VertexPositionColor(p2, color));
             _vertices.Add(
-                new VertexPositionColor(p4, color));
-            _vertices.Add(
                 new VertexPositionColor(p3, color));
+            _vertices.Add(
+                new VertexPositionColor(p4, color));
 
             _lines.Add(new Line(_graphics, p1, p2));
-            _lines.Add(new Line(_graphics, p2, p4));
-            _lines.Add(new Line(_graphics, p3, p4));
-            _lines.Add(new Line(_graphics, p3, p1));
+            _lines.Add(new Line(_graphics, p2, p3));
+            _lines.Add(new Line(_graphics, p4, p3));
+            _lines.Add(new Line(_graphics, p4, p1));
         }
 
         /// <summary>
