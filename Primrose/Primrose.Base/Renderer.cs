@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Primrose.GameCore;
 using System.Collections.Generic;
 using System;
+using Primrose.Interface;
+using System.Security.Cryptography;
 
 namespace Primrose.Base
 {
@@ -16,6 +18,7 @@ namespace Primrose.Base
         private BasicEffect _shader;
         private VertexBuffer _buffer;
         private GraphicsDevice _graphics;
+        private List<Line> _lines;
 
         // Properties:
         /// <summary>
@@ -35,6 +38,7 @@ namespace Primrose.Base
             _vertices = new List<VertexPositionColor>();
             _graphics = graphics;
             _shader = new BasicEffect(_graphics);
+            _lines = new List<Line>();
         }
 
         // Public Methods:
@@ -47,6 +51,69 @@ namespace Primrose.Base
         {
             _vertices.Add(
                 new VertexPositionColor(position, color));
+        }
+
+        /// <summary>
+        /// Adds a triangle to the renderer's vertex buffer.
+        /// </summary>
+        /// <param name="p1">The first vertex position of the triangle</param>
+        /// <param name="p2">The second vertex position of the triangle</param>
+        /// <param name="p3">The third vertex position of the triangle</param>
+        /// <param name="color">color of the vertex.</param>
+        public void AddTriangle(
+            Vector3 p1,
+            Vector3 p2,
+            Vector3 p3,
+            Color color)
+        {
+            // Creating the triangle.
+            _vertices.Add(
+                new VertexPositionColor(p1, color));
+            _vertices.Add(
+                new VertexPositionColor(p2, color));
+            _vertices.Add(
+                new VertexPositionColor(p3, color));
+
+            _lines.Add(new Line(_graphics, p1, p2));
+            _lines.Add(new Line(_graphics, p2, p3));
+            _lines.Add(new Line(_graphics, p3, p1));
+        }
+
+        /// <summary>
+        /// Creates a quad with the 4 given vertices.
+        /// </summary>
+        /// <param name="p1">The first position of the vertex.</param>
+        /// <param name="p2">The second position of the vertex.</param>
+        /// <param name="p3">The third position of the vertex.</param>
+        /// <param name="p4">The fourth position of the vertex.</param>
+        /// <param name="color">The color of the quad.</param>
+        public void AddQuad(
+            Vector3 p1,
+            Vector3 p2,
+            Vector3 p3,
+            Vector3 p4,
+            Color color)
+        {
+            // First triangle.
+            _vertices.Add(
+                new VertexPositionColor(p1, color));
+            _vertices.Add(
+                new VertexPositionColor(p2, color));
+            _vertices.Add(
+                new VertexPositionColor(p3, color));
+
+            // Second triangle.
+            _vertices.Add(
+                new VertexPositionColor(p2, color));
+            _vertices.Add(
+                new VertexPositionColor(p4, color));
+            _vertices.Add(
+                new VertexPositionColor(p3, color));
+
+            _lines.Add(new Line(_graphics, p1, p2));
+            _lines.Add(new Line(_graphics, p2, p4));
+            _lines.Add(new Line(_graphics, p3, p4));
+            _lines.Add(new Line(_graphics, p3, p1));
         }
 
         /// <summary>
@@ -81,6 +148,12 @@ namespace Primrose.Base
 
                 // Rendering the Primitive triangles.
                 _graphics.DrawPrimitives(PrimitiveType.TriangleList, 0, _buffer.VertexCount / 3);
+            }
+
+            // Rendering the lines.
+            foreach (Line line in _lines)
+            {
+                line.Draw(Color.Magenta);
             }
         }
 
@@ -121,7 +194,7 @@ namespace Primrose.Base
         /// <param name="color">Color of the circle being rendered.</param>
         /// <param name="subdivisions">The number of subdivisions for the circle</param>
         /// <param name="radius">Radius of the circle being rendered.</param>
-        public List<VertexPositionColor> SetCircleVertices(Vector3 origin, Color color, int subdivisions, float radius)
+        public void SetCircleVertices(Vector3 origin, Color color, int subdivisions, float radius)
         {
             // Clear the vertices before setting them.
             if (_vertices.Count > 0)
@@ -136,7 +209,7 @@ namespace Primrose.Base
             }
 
             // Declaring some general use variables for the next part of the process.
-            List<VertexPositionColor> tempVertices = new List<VertexPositionColor>();
+            List<Vector3> tempVertices = new List<Vector3>();
             float deltaAngle = (2.0f * MathHelper.Pi) / subdivisions;
             float xCalc = 0;
             float yCalc = 0;
@@ -147,23 +220,21 @@ namespace Primrose.Base
                 xCalc = (float)Math.Cos(deltaAngle * i) * radius;
                 yCalc = (float)Math.Sin(deltaAngle * i) * radius;
 
-                tempVertices.Add(new VertexPositionColor(
-                    new Vector3(
+                tempVertices.Add(new Vector3(
                         xCalc + origin.X, 
                         yCalc + origin.Y, 
-                        0.00f + origin.Z),
-                    color));
+                        0.00f + origin.Z));
             }
 
             // Adding all of the vertices in the proper order to the _vertices list.
             for (int i = 0; i < subdivisions; i++)
             {
-                _vertices.Add(new VertexPositionColor(origin, color));
-                _vertices.Add(tempVertices[i]);
-                _vertices.Add(tempVertices[(i + 1) % subdivisions]);
+                AddTriangle(
+                    origin,
+                    tempVertices[i],
+                    tempVertices[(i + 1) % subdivisions],
+                    color);
             }
-
-            return tempVertices;
         }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Primrose.GameCore;
 using Primrose.Base;
 using System;
+using System.Collections.Generic;
 
 namespace Primrose
 {
@@ -22,6 +23,8 @@ namespace Primrose
         private KeyboardState prevKBState;
 
         private Player player;
+        private Cube cube;
+        private Renderer _renderer;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -46,7 +49,6 @@ namespace Primrose
             base.Initialize();
 
             floor = new ViewFloor(_graphics.GraphicsDevice, 20, 20);
-
             gameState = GameState.Update;
         }
 
@@ -65,6 +67,15 @@ namespace Primrose
                     Content.Load<Texture2D>("knight_texture")),
                 _graphics.GraphicsDevice,
                 new Vector3(10f, 2.0f, 10f));
+
+            cube = new Cube(1.0f, 1.0f, 1.0f);
+
+            _renderer = new Renderer(_graphics.GraphicsDevice);
+            _renderer.SetCircleVertices(
+                new Vector3(10.0f, 3.0f, 20.0f),
+                Color.Chartreuse,
+                16,
+                3);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
@@ -104,6 +115,9 @@ namespace Primrose
 
                     break;
                 case GameState.PermEnd:
+
+                    // Empty case at the moment.
+
                     break;
             }
 
@@ -124,11 +138,13 @@ namespace Primrose
             skybox.Draw(player.Camera.View, player.Camera.Projection, player.Camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            player.Draw();
+            //player.Draw();
+            //cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan);
+            _renderer.Draw(player.Camera);
 
             // Rendering the floor.
             floor.Draw(player.Camera);
-            
+
             base.Draw(gameTime);
         }
 

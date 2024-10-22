@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Primrose.GameCore;
 using System.Collections.Generic;
 using System;
+using System.Reflection;
 
 namespace Primrose.Base
 {
@@ -17,6 +18,7 @@ namespace Primrose.Base
         private float _width;
         private float _height;
         private float _length;
+        private Renderer _renderer;
 
         // Properties:
         /// <summary>
@@ -92,6 +94,7 @@ namespace Primrose.Base
             _width = 1;
             _height = 1;
             _length = 1;
+            _renderer = null;
         }
 
         /// <summary>
@@ -104,6 +107,7 @@ namespace Primrose.Base
             _width = 1;
             _height = 1;
             _length = 1;
+            _renderer = null;
         }
 
         /// <summary>
@@ -125,6 +129,7 @@ namespace Primrose.Base
             _width = width;
             _height = height;
             _length = length;
+            _renderer = null;
         }
 
         /// <summary>
@@ -147,6 +152,7 @@ namespace Primrose.Base
             _width = width;
             _height = height;
             _length = length;
+            _renderer = null;
         }
 
         // Methods:
@@ -161,70 +167,85 @@ namespace Primrose.Base
         }
 
         /// <summary>
-        /// Draws the dimensions of the of the cube to view for debugging purposes.
+        /// Sets the vertices of the cube to draw.
         /// </summary>
         /// <param name="graphics">Graphics device used to render the cube's faces.</param>
-        /// <param name="camera">Camera used for view and projection matrices.</param>
-        /// <param name="tint">Color to render the cube as.</param>
-        public void DebugDraw(GraphicsDevice graphics, Camera camera, Color tint)
+        /// <param name="color">Color to render the cube as.</param>
+        private void SetRenderVertices(GraphicsDevice graphics, Color color)
         {
             List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
 
-            Renderer renderVertices = new Renderer(graphics);
+            // Initializing the renderer;
+            _renderer = new Renderer(graphics);
 
             // Creating the vertices to be put into the buffer for 
             //  rendering all faces of the cube.
-            #region first side
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
-            #endregion
-            #region second side
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
-            #endregion
-            #region third side
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
-            #endregion
-            #region fourth side
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
-            #endregion            
-            #region top
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y + _height, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y + _height, _position.Z), tint);
-            #endregion            
-            #region bottom
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z + _length), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X + _width, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z), tint);
-            renderVertices.Add(new Vector3(_position.X, _position.Y, _position.Z + _length), tint);
-            #endregion
 
-            renderVertices.Draw(camera);
+            // First side.
+            _renderer.AddQuad(
+                new Vector3(_position.X, _position.Y, _position.Z),
+                new Vector3(_position.X + _width, _position.Y, _position.Z),
+                new Vector3(_position.X, _position.Y + _height, _position.Z),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
+                color);
+
+            // Second side.
+            _renderer.AddQuad(
+                new Vector3(_position.X + _width, _position.Y, _position.Z),
+                new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
+                color);
+
+            // Third side.
+            _renderer.AddQuad(
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
+                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X, _position.Y, _position.Z + _length),
+                color);
+
+            // Fourth side.
+            _renderer.AddQuad(
+                new Vector3(_position.X, _position.Y + _height, _position.Z),
+                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X, _position.Y, _position.Z),
+                new Vector3(_position.X, _position.Y, _position.Z + _length),
+                color);
+
+            // Top.
+            _renderer.AddQuad(
+                new Vector3(_position.X, _position.Y + _height, _position.Z),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
+                new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
+                new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
+                color);
+
+            // Bottom.
+            _renderer.AddQuad(
+                new Vector3(_position.X, _position.Y, _position.Z + _length),
+                new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
+                new Vector3(_position.X, _position.Y, _position.Z),
+                new Vector3(_position.X + _width, _position.Y, _position.Z),
+                color);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="camera"></param>
+        /// <param name="color"></param>
+        public void Draw(GraphicsDevice graphics, Camera camera, Color color)
+        {
+            // Making sure that the renderer is not null.
+            if (_renderer is null)
+            {
+                SetRenderVertices(graphics, color);
+            }
+
+            // Calling the renderer draw.
+            _renderer.Draw(camera);
+        }
     }
 }
