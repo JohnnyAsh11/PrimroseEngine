@@ -103,13 +103,22 @@ namespace Primrose.Base
         /// Applies the Rotation Matrix and then the Transformation Matrix to a Vector4.
         /// </summary>
         /// <param name="rotationMatrix">Rotation matrix applied to the Vector4.</param>
-        /// <param name="transformMatrix">Transformation matrix applied to the Vector4.</param>
+        /// <param name="translationMatrix">Transformation matrix applied to the Vector4.</param>
         /// <param name="position">Vector4 position being transformed.</param>
+        /// <param name="order">Dictates the order in which the matrices are applied.</param>
         /// <returns>The transformed Vector4 position.</returns>
-        public static Vector4 ApplyMatrices(Matrix rotationMatrix, Matrix transformMatrix, Vector4 position)
+        public static Vector4 ApplyMatrices(Matrix rotationMatrix, Matrix translationMatrix, Vector4 position, MathOrder order)
         {
-            position = Vector4.Transform(position, rotationMatrix);
-            position = Vector4.Transform(position, transformMatrix);
+            if (order == MathOrder.TranslationFirst)
+            {
+                position = Vector4.Transform(position, translationMatrix);
+                position = Vector4.Transform(position, rotationMatrix);
+            }
+            else if (order == MathOrder.RotationFirst)
+            {
+                position = Vector4.Transform(position, rotationMatrix);
+                position = Vector4.Transform(position, translationMatrix);
+            }
 
             return position;
         }

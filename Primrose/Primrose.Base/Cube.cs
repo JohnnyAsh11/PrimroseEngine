@@ -9,7 +9,7 @@ using System.Reflection;
 namespace Primrose.Base
 {
     /// <summary>
-    /// Defines a Cube in space that defines a position, dimensions and collidability.
+    /// Creates a Cube in space that defines a position, dimensions and collidability.
     /// </summary>
     public struct Cube : ICollide
     {
@@ -171,7 +171,8 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="graphics">Graphics device used to render the cube's faces.</param>
         /// <param name="color">Color to render the cube as.</param>
-        public void SetRenderVertices(GraphicsDevice graphics, Color color)
+        /// <param name="vertexType"></param>
+        public void SetRenderVertices(GraphicsDevice graphics, Color color, VertexType vertexType)
         {
             List<VertexPositionColor> vertexList = new List<VertexPositionColor>();
 
@@ -187,7 +188,8 @@ namespace Primrose.Base
                 new Vector3(_position.X + _width, _position.Y, _position.Z),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
                 new Vector3(_position.X, _position.Y + _height, _position.Z),
-                color);
+                color,
+                vertexType);
 
             // Second side.
             _renderer.AddQuad(
@@ -195,7 +197,8 @@ namespace Primrose.Base
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
-                color);
+                color,
+                vertexType);
 
             // Third side.
             _renderer.AddQuad(
@@ -203,7 +206,8 @@ namespace Primrose.Base
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
                 new Vector3(_position.X, _position.Y, _position.Z + _length),
                 new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
-                color);
+                color,
+                vertexType);
 
             // Fourth side.
             _renderer.AddQuad(
@@ -211,7 +215,8 @@ namespace Primrose.Base
                 new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X, _position.Y, _position.Z + _length),
                 new Vector3(_position.X, _position.Y, _position.Z),
-                color);
+                color,
+                vertexType);
 
             // Top.
             _renderer.AddQuad(
@@ -219,7 +224,8 @@ namespace Primrose.Base
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z),
                 new Vector3(_position.X + _width, _position.Y + _height, _position.Z + _length),
                 new Vector3(_position.X, _position.Y + _height, _position.Z + _length),
-                color);
+                color,
+                vertexType);
 
             // Bottom.
             _renderer.AddQuad(
@@ -227,7 +233,8 @@ namespace Primrose.Base
                 new Vector3(_position.X + _width, _position.Y, _position.Z + _length),
                 new Vector3(_position.X + _width, _position.Y, _position.Z),
                 new Vector3(_position.X, _position.Y, _position.Z),
-                color);
+                color,
+                vertexType);
         }
 
         /// <summary>
@@ -236,12 +243,13 @@ namespace Primrose.Base
         /// <param name="graphics">Graphics device reference for render calls.</param>
         /// <param name="camera">Camera used for matrices and renderer calls.</param>
         /// <param name="color">Color of the primitive in the world.</param>
-        public void Draw(GraphicsDevice graphics, Camera camera, Color color)
+        /// <param name="vertexType"></param>
+        public void Draw(GraphicsDevice graphics, Camera camera, Color color, VertexType vertexType)
         {
             // Making sure that the renderer is not null.
             if (_renderer is null)
             {
-                SetRenderVertices(graphics, color);
+                SetRenderVertices(graphics, color, vertexType);
             }
 
             // Calling the renderer draw.

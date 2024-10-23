@@ -68,15 +68,16 @@ namespace Primrose
                 _graphics.GraphicsDevice,
                 new Vector3(10f, 2.0f, 10f));
 
-            cube = new Cube(1.0f, 1.0f, 1.0f);
+            cube = new Cube(new Vector3(0, 1, 0), 1.0f, 1.0f, 1.0f);
 
             _renderer = new Renderer(_graphics.GraphicsDevice);
             _renderer.SetSphereVertices(
                 new Vector3(10.0f, 3.0f, 20.0f),
                 Color.Chartreuse,
-                32,
-                32,
-                2);
+                16,
+                16,
+                0.5f,
+                VertexType.FilledWireFrame);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
@@ -140,7 +141,7 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             //player.Draw();
-            cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan);
+            cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan, VertexType.FilledWireFrame);
             _renderer.Draw(player.Camera);
 
             // Rendering the floor.

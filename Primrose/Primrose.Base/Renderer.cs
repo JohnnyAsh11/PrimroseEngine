@@ -92,6 +92,55 @@ namespace Primrose.Base
             Vector3 p2,
             Vector3 p3,
             Vector3 p4,
+            Color color,
+            VertexType vertexType)
+        {
+            switch (vertexType)
+            {
+                case VertexType.FilledWireFrame:
+
+                    // Using both filled and wire quad methods.
+                    AddFilledQuad(p1, p2, p3, p4, color);
+                    AddWireQuad(p1, p2, p3, p4, color);
+                    break;
+                case VertexType.Filled:
+
+                    // Only adding the filled quads to the buffer
+                    AddFilledQuad(p1, p2, p3, p4, color);
+                    break;
+                case VertexType.WireFrame:
+
+                    // Only adding the wireframe to the buffer.
+                    AddWireQuad(p1, p2, p3, p4, color);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Creates the wire frame around a quad.
+        /// </summary>
+        private void AddWireQuad(
+            Vector3 p1,
+            Vector3 p2,
+            Vector3 p3,
+            Vector3 p4,
+            Color color)
+        {
+            // Creating the wire mesh.
+            _lines.Add(new Line(_graphics, p1, p2));
+            _lines.Add(new Line(_graphics, p2, p3));
+            _lines.Add(new Line(_graphics, p4, p3));
+            _lines.Add(new Line(_graphics, p4, p1));
+        }
+
+        /// <summary>
+        /// Creates the Filled in area of a quad.
+        /// </summary>
+        private void AddFilledQuad(
+            Vector3 p1,
+            Vector3 p2,
+            Vector3 p3,
+            Vector3 p4,
             Color color)
         {
             // First triangle.
@@ -109,12 +158,6 @@ namespace Primrose.Base
                 new VertexPositionColor(p3, color));
             _vertices.Add(
                 new VertexPositionColor(p4, color));
-
-            // Creating the wire mesh.
-            _lines.Add(new Line(_graphics, p1, p2));
-            _lines.Add(new Line(_graphics, p2, p3));
-            _lines.Add(new Line(_graphics, p4, p3));
-            _lines.Add(new Line(_graphics, p4, p1));
         }
 
         /// <summary>
@@ -138,24 +181,21 @@ namespace Primrose.Base
             // Setting the BasicEffect shader.
             SetShaderEffects(cam);
 
-            // If the buffer is null;
-            if (_buffer is null)
+            // If the buffer is not null,
+            if (_buffer is not null)
             {
-                // Then throw an exception.
-                throw new Exception("ERROR: Vertex buffer is null.  There is nothing to render.");
-            }
+                // Actually render everything in the buffer.
+                foreach (EffectPass pass in _shader.CurrentTechnique.Passes)
+                {
+                    // Applying the shader.
+                    pass.Apply();
 
-            // Actually Rendering the floor.
-            foreach (EffectPass pass in _shader.CurrentTechnique.Passes)
-            {
-                // Appling the shader
-                pass.Apply();
+                    // Setting the VertexBuffer.
+                    _graphics.SetVertexBuffer(_buffer);
 
-                // Setting the VertexBuffer
-                _graphics.SetVertexBuffer(_buffer);
-
-                // Rendering the Primitive triangles.
-                _graphics.DrawPrimitives(PrimitiveType.TriangleList, 0, _buffer.VertexCount / 3);
+                    // Rendering the Primitive triangles.
+                    _graphics.DrawPrimitives(PrimitiveType.TriangleList, 0, _buffer.VertexCount / 3);
+                }
             }
 
             // Rendering the lines.
@@ -255,10 +295,11 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="origin">The origin position of the Sphere.</param>
         /// <param name="color">The color of the sphere primitive.</param>
-        /// <param name="hori_Subdivisions"></param>
-        /// <param name="vert_Subdivisions"></param>
-        /// <param name="radius"></param>
-        public void SetSphereVertices(Vector3 origin, Color color, int hori_Subdivisions, int vert_Subdivisions, float radius)
+        /// <param name="hori_Subdivisions">Subdivsions going along the side view.</param>
+        /// <param name="vert_Subdivisions">Subdivisons going along the top down.</param>
+        /// <param name="vertexType">The type of data being added into the vertex buffer.</param>
+        /// <param name="radius">Radius of the sphere.</param>
+        public void SetSphereVertices(Vector3 origin, Color color, int hori_Subdivisions, int vert_Subdivisions, float radius, VertexType vertexType)
         {
             // Clear the vertices before setting them.
             if (_vertices.Count > 0)
@@ -271,6 +312,10 @@ namespace Primrose.Base
             {
                 hori_Subdivisions = 4;
             }
+            if (vert_Subdivisions < 4)
+            {
+                vert_Subdivisions = 4;
+            }
 
             // Declaring some general use variables for the next part of the process.
             List<Vector4> tempVertices = new List<Vector4>();
@@ -281,9 +326,11 @@ namespace Primrose.Base
             // Looping through all of the subdivisions and calculating the circle locations.
             for (int i = 0; i < hori_Subdivisions; i++)
             {
+                // calculating the x/y position based on the current iteration and amount of subdivisions.
                 xCalc = (float)Math.Cos(deltaAngle * i) * radius;
                 yCalc = (float)Math.Sin(deltaAngle * i) * radius;
 
+                // Creating the vertex.
                 Vector4 vertex = new Vector4(
                         xCalc,
                         yCalc,
@@ -299,15 +346,32 @@ namespace Primrose.Base
             float rotationDelta = (2.0f * MathHelper.Pi) / vert_Subdivisions;
             for (int i = 0; i < vert_Subdivisions + 1; i++)
             {
+                // Creating the current matrix.
                 Matrix rotationMatrix = Matrix.CreateRotationY(rotationDelta * i);
 
                 for (int j = 0; j < hori_Subdivisions; j++)
                 {
                     // Applying transformations to the sphere vertices.
-                    Vector4 p1 = GraphicMath.ApplyMatrices(previousMatrix, transformMatrix, tempVertices[(j + 1) % hori_Subdivisions]);
-                    Vector4 p2 = GraphicMath.ApplyMatrices(previousMatrix, transformMatrix, tempVertices[j]);
-                    Vector4 p3 = GraphicMath.ApplyMatrices(rotationMatrix, transformMatrix, tempVertices[j]);
-                    Vector4 p4 = GraphicMath.ApplyMatrices(rotationMatrix, transformMatrix, tempVertices[(j + 1) % hori_Subdivisions]);
+                    Vector4 p1 = GraphicMath.ApplyMatrices(
+                        previousMatrix, 
+                        transformMatrix, 
+                        tempVertices[(j + 1) % hori_Subdivisions],
+                        MathOrder.RotationFirst);
+                    Vector4 p2 = GraphicMath.ApplyMatrices(
+                        previousMatrix, 
+                        transformMatrix, 
+                        tempVertices[j],
+                        MathOrder.RotationFirst);
+                    Vector4 p3 = GraphicMath.ApplyMatrices(
+                        rotationMatrix, 
+                        transformMatrix, 
+                        tempVertices[j],
+                        MathOrder.RotationFirst);
+                    Vector4 p4 = GraphicMath.ApplyMatrices(
+                        rotationMatrix,
+                        transformMatrix,
+                        tempVertices[(j + 1) % hori_Subdivisions],
+                        MathOrder.RotationFirst);
 
                     // Adding the vertices to the renderer vertex list.
                     AddQuad(
@@ -315,9 +379,11 @@ namespace Primrose.Base
                         GraphicMath.ToVector3(p2),
                         GraphicMath.ToVector3(p3),
                         GraphicMath.ToVector3(p4),
-                        color);
+                        color,
+                        vertexType);
                 }
 
+                // Setting the previous matrix.
                 previousMatrix = rotationMatrix;
             }
         }
