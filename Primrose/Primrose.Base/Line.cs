@@ -19,6 +19,22 @@ namespace Primrose.Base
         private GraphicsDevice _graphics;
 
         // Properties:
+        /// <summary>
+        /// Get/set property for the start of the line.
+        /// </summary>
+        public Vector3 Start
+        {
+            get { return _start; }
+            set { _start = value; }
+        }
+        /// <summary>
+        /// Get/set property for the end of the line.
+        /// </summary>
+        public Vector3 End
+        {
+            get { return _end; }
+            set { _end = value; }
+        }
 
         // Constructors:
         /// <summary>
@@ -61,7 +77,7 @@ namespace Primrose.Base
                 new Vector3(50, 50, 50),
                 new Vector3(0, 0, 0),
                 Vector3.Up);
-
+            
             _shader.Projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.ToRadians(45f),
                 graphics.Viewport.AspectRatio,
@@ -82,7 +98,7 @@ namespace Primrose.Base
                 new VertexPositionColor(_start, color), 
                 new VertexPositionColor(_end, color) 
             };
-
+            
             // Using the graphics object to render to the world.
             _graphics.DrawUserPrimitives(PrimitiveType.LineList, vertices, 0, 1);
         }

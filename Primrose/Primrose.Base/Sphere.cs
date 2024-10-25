@@ -18,6 +18,7 @@ namespace Primrose.Base
         private float _radius;
         private float _diameter;
         private Renderer _renderer;
+        private GraphicsDevice _graphics;
 
         /// <summary>
         /// Defines 
@@ -84,6 +85,7 @@ namespace Primrose.Base
             _height = _diameter;
             _length = _diameter;
 
+            _graphics = graphics;
             _renderer = new Renderer(graphics);
             SetSpheroidVertices(Color.CornflowerBlue);
         }
@@ -103,6 +105,7 @@ namespace Primrose.Base
             _height = _diameter;
             _length = _diameter;
 
+            _graphics = graphics;
             _renderer = new Renderer(graphics);
             SetSpheroidVertices(Color.CornflowerBlue);
         }
@@ -123,6 +126,7 @@ namespace Primrose.Base
             _height = _diameter;
             _length = _diameter;
 
+            _graphics = graphics;
             _renderer = new Renderer(graphics);
             SetSpheroidVertices(Color.CornflowerBlue);
         }
@@ -144,6 +148,7 @@ namespace Primrose.Base
             _height = _diameter;
             _length = _diameter;
 
+            _graphics = graphics;
             _renderer = new Renderer(graphics);
             SetSpheroidVertices(color);
         }
@@ -188,6 +193,19 @@ namespace Primrose.Base
                 _renderer.Vertices[i] = new VertexPositionColor(position, color);
             }
 
+            if (_renderer.Lines is not null)
+            {
+                for (int i = 0; i < _renderer.Lines.Count; i++)
+                {
+                    Line line = _renderer.Lines[i];
+
+                    Vector3 start = Vector3.Transform(line.Start, translation);
+                    Vector3 end = Vector3.Transform(line.End, translation);
+
+                    //_renderer.Lines[i] = new Line(_graphics, start, end);
+                }
+            }
+
             // Applying the translation to the Vector3 origin.
             _origin = Vector3.Transform(_origin, translation);
         }
@@ -196,9 +214,10 @@ namespace Primrose.Base
         /// Renders the Sphere to the game world.
         /// </summary>
         /// <param name="cam">Reference to the active camera used by the player.</param>
-        public void DrawSphere(Camera cam)
+        /// <param name="color">Color to render the sphere with.</param>
+        public void DrawSphere(Camera cam, Color color)
         {
-            _renderer.Draw(cam);
+            _renderer.Draw(cam, color);
         }
 
         /// <inheritdoc />

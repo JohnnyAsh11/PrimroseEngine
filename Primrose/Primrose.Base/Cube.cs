@@ -253,7 +253,7 @@ namespace Primrose.Base
             }
 
             // Calling the renderer draw.
-            _renderer.Draw(camera);
+            _renderer.Draw(camera, color);
         }
     }
 }

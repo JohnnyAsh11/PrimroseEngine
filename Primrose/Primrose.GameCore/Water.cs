@@ -47,7 +47,7 @@ namespace Primrose.GameCore
 
         public void Draw(Camera cam)
         {
-            _renderer.Draw(cam);
+            _renderer.Draw(cam, Color.DarkOrange);
         }
 
     }

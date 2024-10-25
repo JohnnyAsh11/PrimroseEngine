@@ -27,6 +27,7 @@ namespace Primrose
         private Cube cube;
         private Sphere sphere1;
         private Sphere sphere2;
+        private Color color;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -71,6 +72,8 @@ namespace Primrose
                 new Vector3(10f, 2.0f, 10f));
 
             cube = new Cube(new Vector3(0, 1, 0), 1.0f, 1.0f, 1.0f);
+
+            color = Color.Green;
             sphere1 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
@@ -123,7 +126,11 @@ namespace Primrose
 
                     if (sphere1.CheckCollision(sphere2))
                     {
-
+                        color = Color.Red;
+                    }
+                    else
+                    {
+                        color = Color.Green;
                     }
 
                     if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
@@ -157,8 +164,8 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan, VertexType.FilledWireFrame);
-            sphere1.DrawSphere(player.Camera);
-            sphere2.DrawSphere(player.Camera);
+            sphere1.DrawSphere(player.Camera, Color.DarkOrange);
+            sphere2.DrawSphere(player.Camera, color);
 
             // Rendering the floor.
             floor.Draw(player.Camera);

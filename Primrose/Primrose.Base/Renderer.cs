@@ -37,6 +37,14 @@ namespace Primrose.Base
             get { return _vertices; }
         }
 
+        /// <summary>
+        /// Get property for the line list.
+        /// </summary>
+        public List<Line> Lines
+        {
+            get { return _lines; }
+        }
+
         // Constructors:
         /// <summary>
         /// Default constructor for the Renderer class.
@@ -175,11 +183,9 @@ namespace Primrose.Base
         {
             _vertices.Clear();
         }
-
         /// <summary>
-        /// Renders the vertex buffer to the screen.
+        /// Renders the vertex buffer to the screen.  Does not contain color changing logic.
         /// </summary>
-        /// <param name="graphics">Graphics devices used to render to the window.</param>
         /// <param name="cam">Camera object used for matrices.</param>
         public void Draw(Camera cam)
         {
@@ -188,6 +194,46 @@ namespace Primrose.Base
 
             // Setting the BasicEffect shader.
             SetShaderEffects(cam);
+
+            // If the buffer is not null,
+            if (_buffer is not null)
+            {
+                // Actually render everything in the buffer.
+                foreach (EffectPass pass in _shader.CurrentTechnique.Passes)
+                {
+                    // Applying the shader.
+                    pass.Apply();
+
+                    // Setting the VertexBuffer.
+                    _graphics.SetVertexBuffer(_buffer);
+
+                    // Rendering the Primitive triangles.
+                    _graphics.DrawPrimitives(PrimitiveType.TriangleList, 0, _buffer.VertexCount / 3);
+                }
+            }
+
+            // Rendering the lines.
+            foreach (Line line in _lines)
+            {
+                line.Draw(Color.Magenta);
+            }
+        }
+
+        /// <summary>
+        /// Renders the vertex buffer to the screen.
+        /// </summary>
+        /// <param name="cam">Camera object used for matrices.</param>
+        /// <param name="color">Color to render with.</param>
+        public void Draw(Camera cam, Color color)
+        {
+            // Initializing the Buffer object.
+            InitBuffer(_graphics);
+
+            // Setting the BasicEffect shader.
+            SetShaderEffects(cam);
+
+            // Checking the color of the vertices.
+            SetColor(color);
 
             // If the buffer is not null,
             if (_buffer is not null)
@@ -246,6 +292,22 @@ namespace Primrose.Base
 
             // Setting the data as an actual buffer array.
             _buffer.SetData<VertexPositionColor>(_vertices.ToArray());
+        }
+
+        private void SetColor(Color color)
+        {
+            // If the color is the same then break from the method.
+            if (color == _vertices[0].Color)
+            {
+                return;
+            }
+
+            // Looping through and changing the color of all vertices.
+            for (int i = 0; i < _vertices.Count; i++)
+            {
+                Vector3 position = _vertices[i].Position;
+                _vertices[i] = new VertexPositionColor(position, color);
+            }
         }
 
         /// <summary>
