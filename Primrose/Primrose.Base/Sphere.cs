@@ -171,7 +171,11 @@ namespace Primrose.Base
                 VertexType.FilledWireFrame); 
         }
 
-        public void Move(Matrix translation)
+        /// <summary>
+        /// Translates the sphere around the game world.
+        /// </summary>
+        /// <param name="translation">Matrix translation for the sphere.</param>
+        public void Translate(Matrix translation)
         {
             // Making sure that there are vertices.
             if (_renderer.Vertices is null)
@@ -197,12 +201,19 @@ namespace Primrose.Base
             {
                 for (int i = 0; i < _renderer.Lines.Count; i++)
                 {
+                    // Setting a reference to the current line.
                     Line line = _renderer.Lines[i];
 
+                    // Translating the line's start and end points.
                     Vector3 start = Vector3.Transform(line.Start, translation);
                     Vector3 end = Vector3.Transform(line.End, translation);
 
-                    //_renderer.Lines[i] = new Line(_graphics, start, end);
+                    // Setting the start and end lines.
+                    line.Start = start;
+                    line.End = end;
+
+                    // Sending it back to the list.
+                    _renderer.Lines[i] = line;
                 }
             }
 

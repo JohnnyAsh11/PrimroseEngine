@@ -27,7 +27,8 @@ namespace Primrose
         private Cube cube;
         private Sphere sphere1;
         private Sphere sphere2;
-        private Color color;
+        private Color color1;
+        private Color color2;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -73,7 +74,8 @@ namespace Primrose
 
             cube = new Cube(new Vector3(0, 1, 0), 1.0f, 1.0f, 1.0f);
 
-            color = Color.Green;
+            color1 = Color.Green;
+            color1 = Color.DarkOrange;
             sphere1 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
@@ -118,19 +120,19 @@ namespace Primrose
 
                     player.Update(gameTime);
 
-                    Vector3 position = Vector3.Zero;
-                    position.X += 0.01f;
-
+                    Vector3 position = new Vector3(0.01f, 0.01f, 0.01f);
                     Matrix translation = Matrix.CreateTranslation(position);
-                    sphere1.Move(translation);
+                    sphere1.Translate(translation);
 
                     if (sphere1.CheckCollision(sphere2))
                     {
-                        color = Color.Red;
+                        color1 = Color.Red;
+                        color2 = Color.Red;
                     }
                     else
                     {
-                        color = Color.Green;
+                        color1 = Color.Green;
+                        color2 = Color.DarkOrange;
                     }
 
                     if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
@@ -164,8 +166,8 @@ namespace Primrose
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
             cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan, VertexType.FilledWireFrame);
-            sphere1.DrawSphere(player.Camera, Color.DarkOrange);
-            sphere2.DrawSphere(player.Camera, color);
+            sphere1.DrawSphere(player.Camera, color2);
+            sphere2.DrawSphere(player.Camera, color1);
 
             // Rendering the floor.
             floor.Draw(player.Camera);
