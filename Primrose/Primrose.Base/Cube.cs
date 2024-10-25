@@ -243,7 +243,7 @@ namespace Primrose.Base
         /// <param name="graphics">Graphics device reference for render calls.</param>
         /// <param name="camera">Camera used for matrices and renderer calls.</param>
         /// <param name="color">Color of the primitive in the world.</param>
-        /// <param name="vertexType"></param>
+        /// <param name="vertexType">The Style of the primitive when rendered in the world.</param>
         public void Draw(GraphicsDevice graphics, Camera camera, Color color, VertexType vertexType)
         {
             // Making sure that the renderer is not null.

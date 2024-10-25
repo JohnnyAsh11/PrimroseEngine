@@ -27,7 +27,8 @@ namespace Primrose.GameCore
     {
 
         // Fields:
-        private const float _MovementSpeed = 5f;
+        private const float _BaseMovementSpeed = 5.0f;
+        private float _movementSpeed;
         private Vector3 _direction;
         private Vector3 _velocity;
 
@@ -39,8 +40,11 @@ namespace Primrose.GameCore
         private KeyboardState _prevKBState;
         private MouseState _mState;
         private MouseState _prevMState;
+        private GamePadState _gpState;
+        private GamePadState _prevGPState;
+        private Vector2 _gamePadPosition;
 
-        private Vector3 _mouseRotationBuffer;
+        private Vector3 _rotationBuffer;
 
         // Properties:
         #region Properties
@@ -114,6 +118,8 @@ namespace Primrose.GameCore
             _graphics = graphics;
 
             _camState = CameraState.Attached;
+            _gamePadPosition = Vector2.Zero; 
+            _movementSpeed = 5f;
         }
         /// <summary>
         /// Parameterized constructor for the Player class.
@@ -129,6 +135,8 @@ namespace Primrose.GameCore
             _graphics = graphics;
 
             _camState = CameraState.Attached;
+            _gamePadPosition = Vector2.Zero;
+            _movementSpeed = 5f;
         }
 
         // Methods:
@@ -141,10 +149,13 @@ namespace Primrose.GameCore
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             _kbState = Keyboard.GetState();
             _direction = Vector3.Zero;
+            _gpState = GamePad.GetState(PlayerIndex.One);
 
             // Updating the camera positioning.
             UpdateKeyInput(deltaTime);
             UpdateMouseInput(deltaTime);
+
+            _prevGPState = _gpState;
         }
 
         public CameraState CamState { get { return _camState; } }
@@ -165,28 +176,48 @@ namespace Primrose.GameCore
             }
 
             // WASD movement controls.
-            if (_kbState.IsKeyDown(Keys.W))
+            if (_kbState.IsKeyDown(Keys.W) ||
+                _gpState.IsButtonDown(Buttons.LeftThumbstickUp))
             {
                 _direction.Z = 1;
             }
-            if (_kbState.IsKeyDown(Keys.A))
+            if (_kbState.IsKeyDown(Keys.A) ||
+                _gpState.IsButtonDown(Buttons.LeftThumbstickLeft))
             {
                 _direction.X = 1;
             }
-            if (_kbState.IsKeyDown(Keys.S))
+            if (_kbState.IsKeyDown(Keys.S) ||
+                _gpState.IsButtonDown(Buttons.LeftThumbstickDown))
             {
                 _direction.Z = -1;
             }
-            if (_kbState.IsKeyDown(Keys.D))
+            if (_kbState.IsKeyDown(Keys.D) ||
+                _gpState.IsButtonDown(Buttons.LeftThumbstickRight))
             {
                 _direction.X = -1;
             }
 
-            if (_kbState.IsKeyDown(Keys.LeftShift))
+            // Sprinting / increased movement speed.
+            if (_gpState.IsButtonDown(Buttons.LeftStick) &&
+                _prevGPState.IsButtonUp(Buttons.LeftStick))
+            {
+                if (_movementSpeed > _BaseMovementSpeed)
+                {
+                    _movementSpeed = _BaseMovementSpeed;
+                }
+                else if (_movementSpeed == _BaseMovementSpeed)
+                {
+                    _movementSpeed *= 3.0f;
+                }
+            }
+
+            if (_kbState.IsKeyDown(Keys.LeftShift) ||
+                _gpState.IsButtonDown(Buttons.B))
             {
                 _direction.Y = -1;
             }
-            else if (_kbState.IsKeyDown(Keys.Space))
+            else if (_kbState.IsKeyDown(Keys.Space) ||
+                     _gpState.IsButtonDown(Buttons.A))
             {
                 _direction.Y = 1;
             }
@@ -198,7 +229,7 @@ namespace Primrose.GameCore
                 _direction = Vector3.Normalize(_direction);
 
                 // Calculate the velocity.
-                _velocity = _direction * (deltaTime * _MovementSpeed);
+                _velocity = _direction * (deltaTime * _movementSpeed);
 
                 // And move according to that velocity vector.
                 _camera.Move(_velocity);
@@ -211,11 +242,45 @@ namespace Primrose.GameCore
         /// <param name="deltaTime">The change in time between frames.</param>
         private void UpdateMouseInput(float deltaTime)
         {
-            float deltaX;
-            float deltaY;
+            float deltaX = 0;
+            float deltaY = 0;
 
             // Getting the current mouse state.
             _mState = Mouse.GetState();
+
+            if (_gpState != _prevGPState)
+            {
+                float change = 50.0f;
+                if (_gpState.IsButtonDown(Buttons.RightThumbstickUp))
+                {
+                    deltaY = -(change);                
+                }
+                if (_gpState.IsButtonDown(Buttons.RightThumbstickDown))
+                {
+                    deltaY = change;
+                }
+                if (_gpState.IsButtonDown(Buttons.RightThumbstickLeft))
+                {
+                    deltaX = -(change);
+                }
+                if (_gpState.IsButtonDown(Buttons.RightThumbstickRight))
+                {
+                    deltaX = change;
+                }
+
+                // Calculating the rotation buffers.
+                _rotationBuffer.X -= 0.05f * deltaX * deltaTime;
+                _rotationBuffer.Y -= 0.05f * deltaY * deltaTime;
+
+                // Calculating the new rotation vector based off of the calculated values.
+                _camera.Rotation = new Vector3(
+                    -MathHelper.Clamp(
+                        _rotationBuffer.Y,
+                        MathHelper.ToRadians(-75.0f),
+                        MathHelper.ToRadians(75.0f)),
+                    MathHelper.WrapAngle(_rotationBuffer.X),
+                    0);
+            }
 
             if (_mState != _prevMState)
             {
@@ -224,35 +289,36 @@ namespace Primrose.GameCore
                 deltaY = _mState.Y - (_graphics.Viewport.Height / 2);
 
                 // Calculating the rotation buffers.
-                _mouseRotationBuffer.X -= 0.05f * deltaX * deltaTime;
-                _mouseRotationBuffer.Y -= 0.05f * deltaY * deltaTime;
+                _rotationBuffer.X -= 0.05f * deltaX * deltaTime;
+                _rotationBuffer.Y -= 0.05f * deltaY * deltaTime;
 
                 // Clamping the rotation buffers to avoid crazy screen movement.
-                if (_mouseRotationBuffer.Y < MathHelper.ToRadians(-75.0f))
+                if (_rotationBuffer.Y < MathHelper.ToRadians(-75.0f))
                 {
-                    _mouseRotationBuffer.Y =
-                        _mouseRotationBuffer.Y -
-                        (_mouseRotationBuffer.Y - MathHelper.ToRadians(-75.0f));
+                    _rotationBuffer.Y =
+                        _rotationBuffer.Y -
+                        (_rotationBuffer.Y - MathHelper.ToRadians(-75.0f));
                 }
-                if (_mouseRotationBuffer.Y > MathHelper.ToRadians(75.0f))
+                if (_rotationBuffer.Y > MathHelper.ToRadians(75.0f))
                 {
-                    _mouseRotationBuffer.Y =
-                        _mouseRotationBuffer.Y -
-                        (_mouseRotationBuffer.Y - MathHelper.ToRadians(75.0f));
+                    _rotationBuffer.Y =
+                        _rotationBuffer.Y -
+                        (_rotationBuffer.Y - MathHelper.ToRadians(75.0f));
                 }
 
                 // Calculating the new rotation vector based off of the calculated values.
                 _camera.Rotation = new Vector3(
                     -MathHelper.Clamp(
-                        _mouseRotationBuffer.Y,
+                        _rotationBuffer.Y,
                         MathHelper.ToRadians(-75.0f), 
                         MathHelper.ToRadians(75.0f)),
-                    MathHelper.WrapAngle(_mouseRotationBuffer.X),
+                    MathHelper.WrapAngle(_rotationBuffer.X),
                     0);
             }
 
             // Setting the mouse position to be static in the center of the screen.
             Mouse.SetPosition(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
+            _gamePadPosition = new Vector2(_graphics.Viewport.Width / 2, _graphics.Viewport.Height / 2);
 
             // Setting the previous mouse state.
             _prevMState = _mState;

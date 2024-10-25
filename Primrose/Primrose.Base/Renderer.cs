@@ -28,7 +28,15 @@ namespace Primrose.Base
         {
             get { return _vertices.Count; }
         }
-        
+
+        /// <summary>
+        /// Get property for the vertex list.
+        /// </summary>
+        public List<VertexPositionColor> Vertices
+        {
+            get { return _vertices; }
+        }
+
         // Constructors:
         /// <summary>
         /// Default constructor for the Renderer class.
@@ -255,6 +263,12 @@ namespace Primrose.Base
                 _vertices.Clear();
             }
 
+            // Clearing the lines before anything else.
+            if (_lines.Count > 0)
+            {
+                _lines.Clear();
+            }
+
             // Making sure that there is a valid number of subdivisions
             if (subdivisions < 4)
             {
@@ -305,6 +319,12 @@ namespace Primrose.Base
             if (_vertices.Count > 0)
             {
                 _vertices.Clear();
+            }
+
+            // Clearing the lines before anything else.
+            if (_lines.Count > 0)
+            {
+                _lines.Clear();
             }
 
             // Making sure that there is a valid number of subdivisions

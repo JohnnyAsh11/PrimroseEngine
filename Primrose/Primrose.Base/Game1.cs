@@ -5,6 +5,7 @@ using Primrose.GameCore;
 using Primrose.Base;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Primrose
 {
@@ -24,7 +25,8 @@ namespace Primrose
 
         private Player player;
         private Cube cube;
-        private Renderer _renderer;
+        private Sphere sphere1;
+        private Sphere sphere2;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -69,20 +71,23 @@ namespace Primrose
                 new Vector3(10f, 2.0f, 10f));
 
             cube = new Cube(new Vector3(0, 1, 0), 1.0f, 1.0f, 1.0f);
-
-            _renderer = new Renderer(_graphics.GraphicsDevice);
-            _renderer.SetSphereVertices(
-                new Vector3(10.0f, 3.0f, 20.0f),
-                Color.Chartreuse,
-                16,
-                16,
-                0.5f,
-                VertexType.FilledWireFrame);
+            sphere1 = new Sphere(
+                _graphics.GraphicsDevice,
+                1.5f,
+                new Vector3(10, 2, 20),
+                Color.DarkOrange);
+            sphere2 = new Sphere(
+                _graphics.GraphicsDevice,
+                1.5f,
+                new Vector3(15, 2, 20),
+                Color.Green);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
             Helper.SpriteBatch = _spriteBatch;
         }
+
+        private bool done = false;
 
         /// <summary>
         /// Per frame logic updating method for the Game.
@@ -109,6 +114,17 @@ namespace Primrose
                 case GameState.Update:
 
                     player.Update(gameTime);
+
+                    Vector3 position = Vector3.Zero;
+                    position.X += 0.01f;
+
+                    Matrix translation = Matrix.CreateTranslation(position);
+                    sphere1.Move(translation);
+
+                    if (sphere1.CheckCollision(sphere2))
+                    {
+
+                    }
 
                     if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
                     {
@@ -140,9 +156,9 @@ namespace Primrose
             skybox.Draw(player.Camera.View, player.Camera.Projection, player.Camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            //player.Draw();
             cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan, VertexType.FilledWireFrame);
-            _renderer.Draw(player.Camera);
+            sphere1.DrawSphere(player.Camera);
+            sphere2.DrawSphere(player.Camera);
 
             // Rendering the floor.
             floor.Draw(player.Camera);

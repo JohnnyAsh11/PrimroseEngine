@@ -88,18 +88,6 @@ namespace Primrose.Base
         }
 
         /// <summary>
-        /// Wraps the Vector4.Transform method within the 
-        /// GraphicMath class for simplicity and consistency.
-        /// </summary>
-        /// <param name="matrix">The rotation matrix being applied to a Vector4.</param>
-        /// <param name="position">The Vector4 position.</param>
-        /// <returns>The resulting position post rotation.</returns>
-        public static Vector4 ApplyRotationMatrix(Matrix matrix, Vector4 position)
-        {
-            return Vector4.Transform(position, matrix);
-        }
-
-        /// <summary>
         /// Applies the Rotation Matrix and then the Transformation Matrix to a Vector4.
         /// </summary>
         /// <param name="rotationMatrix">Rotation matrix applied to the Vector4.</param>
