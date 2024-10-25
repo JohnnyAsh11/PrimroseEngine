@@ -120,7 +120,7 @@ namespace Primrose
 
                     player.Update(gameTime);
 
-                    Vector3 position = new Vector3(0.01f, 0.01f, 0.01f);
+                    Vector3 position = new Vector3(0.01f, 0.0f, 0.0f);
                     Matrix translation = Matrix.CreateTranslation(position);
                     sphere1.Translate(translation);
 
