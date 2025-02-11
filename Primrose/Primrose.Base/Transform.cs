@@ -93,7 +93,7 @@ namespace Primrose.Primrose.Base
         public Transform()
         {
             m_v3Position = Vector3.Zero;
-            m_fScale = 0.0f;
+            m_fScale = 1.0f;
             m_v3Rotation = Vector3.Zero;
             m_bIsDirty = false;
         }

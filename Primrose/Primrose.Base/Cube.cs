@@ -359,13 +359,13 @@ namespace Primrose.Base
         /// <summary>
         /// Renders the Cube's mesh to the window.
         /// </summary>
-        /// <param name="graphics">Graphics device reference for render calls.</param>
         /// <param name="camera">Camera used for matrices and renderer calls.</param>
         /// <param name="color">Color of the primitive in the world.</param>
-        public void Draw(Camera camera, Color color)
+        /// <param name="a_m4WorldMatrix">World matrix of the object being rendered.</param>
+        public void Draw(Camera camera, Color color, Matrix a_m4WorldMatrix)
         {
             // Calling the renderer draw.
-            _renderer.Draw(camera, color);
+            _renderer.Draw(camera, color, a_m4WorldMatrix);
         }
     }
 }

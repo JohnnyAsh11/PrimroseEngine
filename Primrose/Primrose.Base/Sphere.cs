@@ -277,9 +277,10 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="cam">Reference to the active camera used by the player.</param>
         /// <param name="color">Color to render the sphere with.</param>
-        public void DrawSphere(Camera cam, Color color)
+        /// <param name="a_m4WorldMatrix">World matrix of the object being rendered.</param>
+        public void DrawSphere(Camera cam, Color color, Matrix a_m4WorldMatrix)
         {
-            _renderer.Draw(cam, color);
+            _renderer.Draw(cam, color, a_m4WorldMatrix);
         }
 
         /// <inheritdoc />

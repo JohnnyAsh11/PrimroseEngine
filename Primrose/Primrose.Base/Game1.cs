@@ -6,6 +6,7 @@ using Primrose.Base;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Primrose.Primrose.Base;
 
 namespace Primrose
 {
@@ -30,6 +31,8 @@ namespace Primrose
         private Sphere sphere2;
         private Color color1;
         private Color color2;
+
+        private Transform m_tTransform;
 
         /// <summary>
         /// Default constructor for the Game.
@@ -65,6 +68,8 @@ namespace Primrose
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             skybox = new Skybox("Textures/Skybox", Content);
 
+            m_tTransform = new Transform();
+
             player = new Player(
                 new Cube(),
                 new Asset(
@@ -87,13 +92,13 @@ namespace Primrose
                 1.0f);
 
             color1 = Color.Green;
-            color1 = Color.DarkOrange;
+            color2 = Color.Blue;
 
             sphere1 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
                 new Vector3(0, 0, 0),
-                Color.DarkOrange);
+                Color.Blue);
             sphere2 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
@@ -102,13 +107,17 @@ namespace Primrose
                 //new Vector3(10, 2, 30),   // Z
                 Color.Green);
 
-            Matrix transform = Matrix.CreateTranslation(new Vector3(2.0f, 0.0f, 0.0f));
+            Matrix transform = Matrix.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
             sphere1.Transform(transform);
+
+            m_tTransform.Position = new Vector3(5.0f, 0.0f, 5.0f);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
             Helper.SpriteBatch = _spriteBatch;
         }
+
+        float fNum = 0.0f;
 
         /// <summary>
         /// Per frame logic updating method for the Game.
@@ -127,7 +136,7 @@ namespace Primrose
                     break;
                 case GameState.Update:
 
-                    player.Update(gameTime);
+                    if (!kbState.IsKeyDown(Keys.Space)) player.Update(gameTime);
 
                     // Collision and movement testing.
                     Vector3 position = new Vector3(0.01f, 0.0f, 0.0f);
@@ -136,7 +145,13 @@ namespace Primrose
 
                     //sphere1.Position = Vector3.Transform(sphere1.Position, transformation);
                     //cube1.Transform(transformation);
-                    sphere1.Transform(transformation);
+                    //sphere1.Transform(transformation);
+
+                    m_tTransform.Rotation = new Vector3(
+                        fNum,
+                        fNum,
+                        fNum);
+                    fNum += 0.05f;
 
                     //sphere1.Z -= 0.01f;
 
@@ -183,11 +198,11 @@ namespace Primrose
             skybox.Draw(player.Camera.View, player.Camera.Projection, player.Camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            cube2.Draw(player.Camera, color2);
-            cube1.Draw(player.Camera, color1);
+            cube2.Draw(player.Camera, color2, Matrix.Identity);
+            cube1.Draw(player.Camera, color1, Matrix.Identity);
 
-            sphere1.DrawSphere(player.Camera, color2);
-            sphere2.DrawSphere(player.Camera, color1);
+            sphere1.DrawSphere(player.Camera, Color.Blue, m_tTransform.WorldMatrix);
+            sphere2.DrawSphere(player.Camera, color1, Matrix.Identity);
 
             // Rendering the floor.
             floor.Draw(player.Camera);

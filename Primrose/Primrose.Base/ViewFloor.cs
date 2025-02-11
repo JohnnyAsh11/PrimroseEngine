@@ -87,7 +87,7 @@ namespace Primrose.Base
         /// <param name="camera">Camera object for the world.</param>
         public void Draw(Camera camera)
         {
-            _renderer.Draw(camera);
+            _renderer.Draw(camera, Matrix.Identity);
         }
     }
 }

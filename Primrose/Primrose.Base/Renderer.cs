@@ -187,13 +187,14 @@ namespace Primrose.Base
         /// Renders the vertex buffer to the screen.  Does not contain color changing logic.
         /// </summary>
         /// <param name="cam">Camera object used for matrices.</param>
-        public void Draw(Camera cam)
+        /// <param name="a_m4WorldMatrix">World matrix for the object being rendered.</param>
+        public void Draw(Camera cam, Matrix a_m4WorldMatrix)
         {
             // Initializing the Buffer object.
             InitBuffer(_graphics);
 
             // Setting the BasicEffect shader.
-            SetShaderEffects(cam);
+            SetShaderEffects(cam, a_m4WorldMatrix);
 
             // If the buffer is not null,
             if (_buffer is not null)
@@ -224,13 +225,14 @@ namespace Primrose.Base
         /// </summary>
         /// <param name="cam">Camera object used for matrices.</param>
         /// <param name="color">Color to render with.</param>
-        public void Draw(Camera cam, Color color)
+        /// <param name="a_m4WorldMatrix">World matrix of the object being rendered.</param>
+        public void Draw(Camera cam, Color color, Matrix a_m4WorldMatrix)
         {
             // Initializing the Buffer object.
             InitBuffer(_graphics);
 
             // Setting the BasicEffect shader.
-            SetShaderEffects(cam);
+            SetShaderEffects(cam, a_m4WorldMatrix);
 
             // Checking the color of the vertices.
             SetColor(color);
@@ -264,12 +266,13 @@ namespace Primrose.Base
         /// Sets all of the shader's fields.
         /// </summary>
         /// <param name="cam">Camera to pull matrix data from.</param>
-        private void SetShaderEffects(Camera cam)
+        /// <param name="a_m4WorldMatrix">Matrix for the world position of the object.</param>
+        private void SetShaderEffects(Camera cam, Matrix a_m4WorldMatrix)
         {
             _shader.VertexColorEnabled = true;
             _shader.View = cam.View;
             _shader.Projection = cam.Projection;
-            _shader.World = Matrix.Identity;
+            _shader.World = a_m4WorldMatrix;
         }
 
         /// <summary>
