@@ -24,7 +24,8 @@ namespace Primrose
         private KeyboardState prevKBState;
 
         private Player player;
-        private Cube cube;
+        private Cube cube1;
+        private Cube cube2;
         private Sphere sphere1;
         private Sphere sphere2;
         private Color color1;
@@ -72,27 +73,42 @@ namespace Primrose
                 _graphics.GraphicsDevice,
                 new Vector3(10f, 2.0f, 10f));
 
-            cube = new Cube(new Vector3(0, 1, 0), 1.0f, 1.0f, 1.0f);
+            cube1 = new Cube(
+                _graphics.GraphicsDevice,
+                new Vector3(-5, 0.5f, 0.5f), 
+                1.0f,
+                1.0f,
+                1.0f);
+            cube2 = new Cube(
+                _graphics.GraphicsDevice,
+                new Vector3(2, 1, 0), 
+                1.0f,
+                1.0f,
+                1.0f);
 
             color1 = Color.Green;
             color1 = Color.DarkOrange;
+
             sphere1 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
-                new Vector3(10, 2, 20),
+                new Vector3(0, 0, 0),
                 Color.DarkOrange);
             sphere2 = new Sphere(
                 _graphics.GraphicsDevice,
                 1.5f,
-                new Vector3(15, 2, 20),
+                new Vector3(15, 2, 20),     // X
+                //new Vector3(10, -2, 20),  // Y
+                //new Vector3(10, 2, 30),   // Z
                 Color.Green);
+
+            Matrix transform = Matrix.CreateTranslation(new Vector3(2.0f, 0.0f, 0.0f));
+            sphere1.Transform(transform);
 
             // Setting the debug Helper class.
             Helper.Font = Content.Load<SpriteFont>("Arial40");
             Helper.SpriteBatch = _spriteBatch;
         }
-
-        private bool done = false;
 
         /// <summary>
         /// Per frame logic updating method for the Game.
@@ -101,30 +117,31 @@ namespace Primrose
         protected override void Update(GameTime gameTime)
         {
             KeyboardState kbState = Keyboard.GetState();
+            MouseState mState = Mouse.GetState();
 
             switch (gameState)
             {
                 case GameState.Pause:
 
-                    if (kbState.IsKeyDown(Keys.Escape) && prevKBState.IsKeyUp(Keys.Escape))
-                    {
-                        Exit();
-                    }
-                    if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
-                    {
-                        gameState = GameState.Update;
-                    }
 
                     break;
                 case GameState.Update:
 
                     player.Update(gameTime);
 
+                    // Collision and movement testing.
                     Vector3 position = new Vector3(0.01f, 0.0f, 0.0f);
-                    Matrix translation = Matrix.CreateTranslation(position);
-                    sphere1.Translate(translation);
+                    //Matrix transformation = Matrix.CreateTranslation(position);
+                    Matrix transformation = Matrix.CreateRotationY(position.X);
 
-                    if (sphere1.CheckCollision(sphere2))
+                    //sphere1.Position = Vector3.Transform(sphere1.Position, transformation);
+                    //cube1.Transform(transformation);
+                    sphere1.Transform(transformation);
+
+                    //sphere1.Z -= 0.01f;
+
+                    if (sphere1.CheckCollision(sphere2) ||
+                        cube1.CheckCollision(cube2))
                     {
                         color1 = Color.Red;
                         color2 = Color.Red;
@@ -135,16 +152,17 @@ namespace Primrose
                         color2 = Color.DarkOrange;
                     }
 
-                    if (kbState.IsKeyDown(Keys.E) && prevKBState.IsKeyUp(Keys.E))
+                    if (kbState.IsKeyDown(Keys.Escape) && prevKBState.IsKeyUp(Keys.Escape))
                     {
-                        gameState = GameState.Pause;
+                        gameState = GameState.PermEnd;
                     }
 
                     break;
                 case GameState.PermEnd:
 
-                    // Empty case at the moment.
+                    // Put in destruction logic.
 
+                    Exit();
                     break;
             }
 
@@ -165,7 +183,9 @@ namespace Primrose
             skybox.Draw(player.Camera.View, player.Camera.Projection, player.Camera.Position);
             Helper.ChangeCullMode(_graphics.GraphicsDevice, CullMode.CullCounterClockwiseFace);
 
-            cube.Draw(_graphics.GraphicsDevice, player.Camera, Color.Cyan, VertexType.FilledWireFrame);
+            cube2.Draw(player.Camera, color2);
+            cube1.Draw(player.Camera, color1);
+
             sphere1.DrawSphere(player.Camera, color2);
             sphere2.DrawSphere(player.Camera, color1);
 

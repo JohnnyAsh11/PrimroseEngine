@@ -27,48 +27,6 @@ namespace Primrose.Base
         }
 
         /// <summary>
-        /// Creates a translation matrix.
-        /// </summary>
-        /// <param name="axisChanges">Specifies the degrees upon which the position is translating.</param>
-        /// <returns>The translation matrix.</returns>
-        public static Matrix Translate(Vector4 axisChanges)
-        {
-            // Starting with the identity matrix.
-            Matrix translationMatrix = Matrix.Identity;
-
-            // Applying the translation to the X, Y and Z axes.
-            translationMatrix.M41 = axisChanges.X;
-            translationMatrix.M42 = axisChanges.Y;
-            translationMatrix.M43 = axisChanges.Z;
-
-            return translationMatrix;
-        }
-
-        /// <summary>
-        /// Performs a rotation along the Y axis and returns the resulting Vector3.
-        /// </summary>
-        /// <param name="position">Position being rotated.</param>
-        /// <param name="degrees">Degree upon which we are rotating.</param>
-        /// <returns>The resulting position of the rotation.</returns>
-        public static void YAxisRotation(ref Vector4 position, float degrees)
-        {
-            Vector4 row1 = new Vector4((float)Math.Cos(degrees), 0, (float)Math.Sin(degrees), 0);
-            Vector4 row2 = new Vector4(0, 1, 0, 0);
-            Vector4 row3 = new Vector4(-(float)Math.Sin(degrees), 0, (float)Math.Cos(degrees), 0);
-            Vector4 row4 = new Vector4(0, 0, 0, 1);
-
-            Matrix rotationMatrix = new Matrix(
-                row1,
-                row2,
-                row3,
-                row4);
-
-            position = Vector4.Transform(position, rotationMatrix);
-
-            //return position;
-        }
-
-        /// <summary>
         /// Converts a Vector4 into a Vector3 by removing the W value.
         /// </summary>
         /// <param name="vec4">Vector4 being converted to a Vector3.</param>

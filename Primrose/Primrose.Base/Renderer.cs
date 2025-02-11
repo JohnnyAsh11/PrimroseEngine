@@ -293,7 +293,11 @@ namespace Primrose.Base
             // Setting the data as an actual buffer array.
             _buffer.SetData<VertexPositionColor>(_vertices.ToArray());
         }
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color"></param>
         private void SetColor(Color color)
         {
             // If the color is the same then break from the method.

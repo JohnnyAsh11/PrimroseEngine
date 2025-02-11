@@ -79,7 +79,7 @@ namespace Primrose.GameCore
             _cameraSpeed = speed;
             _graphics = graphics;
 
-            // Setup projection marix.
+            // Setup projection matrix.
             _projection = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4,
                 graphics.Viewport.AspectRatio,

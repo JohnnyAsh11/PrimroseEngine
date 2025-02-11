@@ -4,13 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Diagnostics;
 using Primrose.GameCore;
+using System.Transactions;
 
 namespace Primrose.Base
 {
     /// <summary>
     /// Creates a Sphere in space that defines a position, dimensions and collidability.
     /// </summary>
-    public struct Sphere : ICollide 
+    public struct Sphere : ICollide, ITransform 
     {
 
         // Fields:
@@ -21,7 +22,7 @@ namespace Primrose.Base
         private GraphicsDevice _graphics;
 
         /// <summary>
-        /// Defines 
+        /// Defines a dimension of the sphere.
         /// </summary>
         private float _width, _height, _length;
 
@@ -30,25 +31,80 @@ namespace Primrose.Base
         public Vector3 Position
         {
             get { return _origin; }
-            set { _origin = value; }
+            set 
+            {
+                // If there was no value change.
+                if (_origin == value) return;
+
+                // Determining the _origin is changing.
+                Vector3 deltaPosition = value - _origin;
+
+                // Transform according to the change in position.
+                Transform(Matrix.CreateTranslation(deltaPosition));
+
+                // Set the value.
+                _origin = value; 
+            }
         }
         /// <inheritdoc />
         public float X
         {
             get { return _origin.X; }
-            set { _origin.X = value; }
+            set 
+            {
+                // If there was no value change.
+                if (_origin.X == value) return;
+
+                // Calculating the change in X.
+                float deltaX = value - _origin.X;
+
+                // Transforming according to the change.
+                Transform(Matrix.CreateTranslation(
+                    new Vector3(deltaX, 0.0f, 0.0f)));
+
+                // Setting the new value.
+                _origin.X = value;
+            }
         }
         /// <inheritdoc />
         public float Y
         {
             get { return _origin.Y; }
-            set { _origin.Y = value; }
+            set
+            {
+                // If there was no value change.
+                if (_origin.Y == value) return;
+
+                // Calculating the change in Y.
+                float deltaY = value - _origin.Y;
+
+                // Transforming according to the change.
+                Transform(Matrix.CreateTranslation(
+                    new Vector3(0.0f, deltaY, 0.0f)));
+
+                // Setting the new value.
+                _origin.Y = value;
+            }
         }
         /// <inheritdoc />
         public float Z
         {
             get { return _origin.Z; }
-            set { _origin.Z = value; }
+            set
+            {
+                // If there was no value change.
+                if (_origin.Z == value) return;
+
+                // Calculating the change in Z.
+                float deltaZ = value - _origin.Z;
+
+                // Transforming according to the change.
+                Transform(Matrix.CreateTranslation(
+                    new Vector3(0.0f, 0.0f, deltaZ)));
+
+                // Setting the new value.
+                _origin.Z = value;
+            }
         }
 
         /// <inheritdoc />
@@ -111,7 +167,7 @@ namespace Primrose.Base
         }
 
         /// <summary>
-        /// Constructs a Sphere with an inputed position and radius.
+        /// Constructs a Sphere with an inputted position and radius.
         /// </summary>
         /// <param name="graphics">Reference to the graphics object for rendering.</param>
         /// <param name="radius">Reference to the graphics object for rendering.</param>
@@ -132,7 +188,7 @@ namespace Primrose.Base
         }
         
         /// <summary>
-        /// Constructs a Sphere with an inputed position and radius.
+        /// Constructs a Sphere with an inputted position and radius.
         /// </summary>
         /// <param name="graphics">Reference to the graphics object for rendering.</param>
         /// <param name="radius">Reference to the graphics object for rendering.</param>
@@ -172,10 +228,10 @@ namespace Primrose.Base
         }
 
         /// <summary>
-        /// Translates the sphere around the game world.
+        /// Transforms the sphere around the game world.
         /// </summary>
-        /// <param name="translation">Matrix translation for the sphere.</param>
-        public void Translate(Matrix translation)
+        /// <param name="transformation">Matrix transformation for the sphere.</param>
+        public void Transform(Matrix transformation)
         {
             // Making sure that there are vertices.
             if (_renderer.Vertices is null)
@@ -183,18 +239,17 @@ namespace Primrose.Base
                 return;
             }
 
-            // Looping through and appling the translation to all vertices.
+            // Looping through and applying the translation to all vertices.
             for (int i = 0; i < _renderer.Count; i++)
             {
                 // Saving the current iteration as variables.
-                Vector3 position = _renderer.Vertices[i].Position;
-                Color color = _renderer.Vertices[i].Color;
+                VertexPositionColor vertex = _renderer.Vertices[i];
 
                 // Applying the transformation.
-                position = Vector3.Transform(position, translation);
+                vertex.Position = Vector3.Transform(vertex.Position, transformation);
 
                 // Setting the new vertex.
-                _renderer.Vertices[i] = new VertexPositionColor(position, color);
+                _renderer.Vertices[i] = vertex;
             }
 
             if (_renderer.Lines is not null)
@@ -205,12 +260,8 @@ namespace Primrose.Base
                     Line line = _renderer.Lines[i];
 
                     // Translating the line's start and end points.
-                    Vector3 start = Vector3.Transform(line.Start, translation);
-                    Vector3 end = Vector3.Transform(line.End, translation);
-
-                    // Setting the start and end lines.
-                    line.Start = start;
-                    line.End = end;
+                    line.Start = Vector3.Transform(line.Start, transformation);
+                    line.End = Vector3.Transform(line.End, transformation);
 
                     // Sending it back to the list.
                     _renderer.Lines[i] = line;
@@ -218,7 +269,7 @@ namespace Primrose.Base
             }
 
             // Applying the translation to the Vector3 origin.
-            _origin = Vector3.Transform(_origin, translation);
+            _origin = Vector3.Transform(_origin, transformation);
         }
 
         /// <summary>
@@ -232,26 +283,35 @@ namespace Primrose.Base
         }
 
         /// <inheritdoc />
-        public bool CheckCollision(ICollide collidable)
+        public bool CheckCollision(ICollide a_iCollidable)
         {
-            if (collidable is Sphere)
+            // If the collidable is a sphere:
+            if (a_iCollidable is Sphere)
             {
-                Sphere other = (Sphere)collidable;
+                // Casting the collidable.
+                Sphere other = (Sphere)a_iCollidable;
 
+                // Finding the squared distance between the two origins.
                 float distanceSqrd = 
                     (float)Math.Pow((_origin.X - other.X), 2) +
                     (float)Math.Pow((_origin.Y - other.Y), 2) +
                     (float)Math.Pow((_origin.Z - other.Z), 2);
 
+                // Finding the sum of their radii.
                 float sumOfRadii = other._radius + _radius;
 
+                // Comparing the distances between and the sum of the radii.
                 return distanceSqrd < Math.Pow(sumOfRadii, 2);
             }
-            else if (collidable is Cube)
+
+            // If the collidable is a Cube:
+            else if (a_iCollidable is Cube)
             {
-                Cube other = (Cube)collidable;
+                // Casting the collidable.
+                Cube other = (Cube)a_iCollidable;
             }
 
+            // If there is no case for the collidable, return false.
             return false;
         }
 
