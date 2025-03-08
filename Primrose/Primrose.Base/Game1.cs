@@ -66,7 +66,7 @@ namespace Primrose
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            skybox = new Skybox("Textures/Skybox", Content);
+            skybox = new Skybox("Textures/SkyBox", Content);
 
             m_tTransform = new Transform();
 
@@ -107,8 +107,8 @@ namespace Primrose
                 //new Vector3(10, 2, 30),   // Z
                 Color.Green);
 
-            Matrix transform = Matrix.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
-            sphere1.Transform(transform);
+            //Matrix transform = Matrix.CreateTranslation(new Vector3(0.0f, 0.0f, 0.0f));
+            //sphere1.Transform(transform);
 
             m_tTransform.Position = new Vector3(5.0f, 0.0f, 5.0f);
 
@@ -147,11 +147,12 @@ namespace Primrose
                     //cube1.Transform(transformation);
                     //sphere1.Transform(transformation);
 
-                    m_tTransform.Rotation = new Vector3(
-                        fNum,
-                        fNum,
-                        fNum);
-                    fNum += 0.05f;
+                    //m_tTransform.Rotation = new Vector3(
+                    //    fNum,
+                    //    fNum,
+                    //    fNum);
+                    //fNum += 0.05f;
+                    m_tTransform.Position = new Vector3(0.1f, 0.0f, 0.0f);
 
                     //sphere1.Z -= 0.01f;
 
